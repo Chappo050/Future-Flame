@@ -86,8 +86,8 @@
 				{#if session}
 					<a href="/account" class="btn hidden md:block variant-ringed-primary">Account</a>
 				{:else}
-					<a href="/auth/login" class="btn hidden md:block variant-ringed-primary">Login</a>
-					<a href="/auth/register" class="btn btn-sm md:btn variant-filled-primary">Get Started</a>
+					<a href="/auth/signin" class="btn hidden md:block variant-ringed-primary">Login</a>
+					<a href="/auth/signup" class="btn btn-sm md:btn variant-filled-primary">Get Started</a>
 				{/if}
 			</svelte:fragment>
 		</AppBar>

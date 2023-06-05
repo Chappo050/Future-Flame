@@ -22,13 +22,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	};
 
 	// protect POST requests to all routes that start with /protected-posts
-	if (event.request.method === 'POST') {
-		const session = await event.locals.getSession();
-		if (!session) {
-			// the user is not signed in
-			throw error(401, { message: 'Unauthorized' });
-		}
-	}
+	// if (event.request.method === 'POST') {
+	// 	const session = await event.locals.getSession();
+	// 	if (!session) {
+	// 		// the user is not signed in
+	// 		throw error(401, { message: 'Unauthorized' });
+	// 	}
+	// }
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

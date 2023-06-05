@@ -2,9 +2,17 @@
 <script lang="ts">
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
-	import Login from '$lib/components/auth/Login.svelte';
+	import { enhance, type SubmitFunction } from '$app/forms';
 
 	export let data;
+	let loading = false;
+	//Can be used to enhance form submissions
+	const handleSubmit: SubmitFunction = () => {
+		loading = true;
+		return async () => {
+			loading = false;
+		};
+	};
 </script>
 
 <svelte:head>
@@ -23,5 +31,7 @@
 		}}
 		additionalData={[]}
 	/>
-	<Login data />
+	<form action="?/signInGoogle" method="post" use:enhance={handleSubmit}>
+		<button class="btn variant-filled" type="submit">Google</button>
+	</form>
 </div>
