@@ -25,7 +25,7 @@ export const actions: Actions = {
 				});
 			}
 
-			throw redirect(303, data.url);
+			throw redirect(303, '/account');
 		}
 
 		const body = Object.fromEntries(await request.formData());
