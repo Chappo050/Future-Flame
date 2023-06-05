@@ -16,6 +16,11 @@
 		type DrawerSettings
 	} from '@skeletonlabs/skeleton';
 
+	//Analytics
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+	inject({ mode: dev ? 'development' : 'production' });
+
 	//Components
 	import SideNav from '$lib/components/SideNav.svelte';
 	import Hamburger from '$lib/svgs/Hamburger.svelte';
