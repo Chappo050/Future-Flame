@@ -3,25 +3,28 @@
 	import { enhance, type SubmitFunction } from '$app/forms';
 	import Avatar from '$lib/components/account/Avatar.svelte';
 	import MyProgessRadial from '$lib/components/global/MyProgessRadial.svelte';
-
+	import { InputChip, toastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	export let data;
 	export let form;
 
 	let { session, supabase, profile } = data;
-
+	const t: ToastSettings = {
+		message: 'User profile updated successfully',
+		background: 'variant-filled-success'
+	};
 	let profileForm: any;
 	let loading = false;
 
 	//populate fields
-	let fullName: string = profile?.full_name ?? '';
 	let username: string = profile?.username ?? '';
 	let avatar_url: string = profile?.avatar_url ?? '';
-	let website: string = profile?.full_name ?? '';
+	let website: string = profile?.website ?? '';
 
 	//Can be used to enhance form submissions
 	const handleSubmit: SubmitFunction = () => {
 		loading = true;
 		return async () => {
+			toastStore.trigger(t);
 			loading = false;
 		};
 	};
@@ -58,12 +61,6 @@
 			><span> Email </span>
 			<input class="input" type="text" value={session.user.email} disabled />
 		</label>
-
-		<label class="label"
-			><span> Full Name </span>
-			<input class="input" name="full_name" type="text" value={form?.fullName ?? fullName} />
-		</label>
-
 		<label class="label">
 			<span>Username</span>
 			<input class="input" name="username" type="text" value={form?.username ?? username} />

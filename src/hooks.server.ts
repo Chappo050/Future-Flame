@@ -21,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return session;
 	};
 
-	// protect POST requests to all routes that start with /protected-posts
+	// // protect POST requests to all routes that start with /protected-posts
 	// if (event.request.method === 'POST') {
 	// 	const session = await event.locals.getSession();
 	// 	if (!session) {

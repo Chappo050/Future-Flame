@@ -67,6 +67,8 @@
 <div class=" flex-col text-center justify-center">
 	{#if avatar_url && !loading && !uploading}
 		<Avatar src={avatar_url} fallback={NoImage} width="w-32" rounded="rounded-full mx-auto" />
+	{:else if !avatar_url && !loading && !uploading}
+		<Avatar src={NoImage} width="w-32" rounded="rounded-full mx-auto" />
 	{:else}
 		<MyProgessRadial />
 	{/if}
