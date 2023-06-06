@@ -4,7 +4,7 @@
 	const submitSocialLogin: SubmitFunction = async ({ action, cancel }: any) => {};
 </script>
 
-<main class="flex flex-col justify-center items-center h-1/2">
+<main class="flex flex-col justify-center items-center h-full">
 	<h1 class="h1">Sign Up</h1>
 	<form action="?/register" method="POST" class="flex flex-col gap-5">
 		<label class="label"

@@ -2,14 +2,20 @@
 import type { RequestHandler } from './$types';
 import { json, error } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ locals: { supabase, getSession } }) => {
+export const DELETE: RequestHandler = async ({ url, locals: { supabase, getSession } }) => {
+	const postID: string | null = url.searchParams.get('postID');
 	const session = await getSession();
-	if (!session) {
-		// the user is not signed in
-		throw error(401, { message: 'Unauthorized' });
-	}
-	const { data } = await supabase.from('test').select('*');
-	console.log('data', data);
 
-	return json({ data });
+	if (!session) throw error(401, { message: 'Unauthorized' });
+	if (!postID) throw error(500, { message: 'Cannot find post ID' });
+
+	const { error: deleteError } = await supabase.from('posts').delete().eq('id', postID);
+
+	if (deleteError) {
+		console.log('Error', deleteError);
+		// the user is not signed in
+		throw error(500, { message: 'Error deleting' });
+	}
+
+	return json({ success: true });
 };

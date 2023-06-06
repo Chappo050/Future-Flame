@@ -10,7 +10,7 @@
 	<title>User Management</title>
 </svelte:head>
 
-<div class=" flex h-3/4 justify-center items-center">
+<div class=" flex h-full justify-center items-center">
 	<SocialAuth
 		providers={['google']}
 		supabaseClient={data.supabase}

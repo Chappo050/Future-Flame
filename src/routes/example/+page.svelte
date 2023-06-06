@@ -20,11 +20,11 @@
 	};
 
 	// Function declaration Section
-	// Loading data from database server-side example
-	async function loadData() {
-		const { data: result } = await data.supabase.from('test').select('*').limit(20);
-		loadedData = result;
-	}
+	// // Loading data from database server-side example
+	// async function loadData() {
+	// 	const { data: result } = await data.supabase.from('test').select('*').limit(20);
+	// 	loadedData = result;
+	// }
 
 	// Functions using stores
 	function createNote(): void {
@@ -52,11 +52,11 @@
 
 	// Computed Section
 	// Client-side RLS
-	$: if (data.session) {
-		loadData();
-	}
+	// $: if (data.session) {
+	// 	loadData();
+	// }
 
-	$: ({ tableData } = data);
+	// $: ({ tableData } = data);
 
 	$: if (form?.success) {
 		resetForm();
@@ -113,6 +113,4 @@
 			<button type="submit" class="btn w-full variant-filled-primary">Submit</button>
 		</form>
 	{/if}
-
-	<pre>{JSON.stringify(tableData, null, 2)}</pre>
 </div>

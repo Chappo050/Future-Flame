@@ -18,7 +18,8 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const data = DataParser.formDataToObject(formData);
 
-		const { error: createPostError, data: newPost } = await supabase.from('post').insert(data);
+		const { error: createPostError, data: newPost } = await supabase.from('posts').insert(data);
+		console.log(createPostError);
 
 		if (createPostError) {
 			return fail(500, {

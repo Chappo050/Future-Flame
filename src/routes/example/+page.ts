@@ -9,14 +9,4 @@ export const load: PageLoad = async ({ parent }) => {
 	if (!session) {
 		throw redirect(303, '/');
 	}
-
-	//Grab data
-	const { data: tableData } = await supabase.from('test').select('*');
-
-	console.log(tableData);
-
-	//Refercened as data in +page.ts
-	return {
-		tableData
-	};
 };

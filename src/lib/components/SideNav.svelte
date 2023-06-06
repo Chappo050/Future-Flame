@@ -14,13 +14,19 @@
 	<ul>
 		<li><a href="/" class={classesActive('/')} on:click={drawerClose}>Home</a></li>
 		<li><a href="/groups" class={classesActive('/groups')} on:click={drawerClose}>Groups</a></li>
-		<li><a href="/notes" class={classesActive('/notes')} on:click={drawerClose}>Notes</a></li>
+		<li>
+			<a
+				href="/notes"
+				data-sveltekit-preload-data
+				class={classesActive('/notes')}
+				on:click={drawerClose}>Notes</a
+			>
+		</li>
 		{#if session}
 			<li>
 				<a href="/example" class={classesActive('/example')} on:click={drawerClose}>Example</a>
 			</li>
 		{/if}
-		<li><a href="/Other" class={classesActive('/other')} on:click={drawerClose}>Other</a></li>
 	</ul>
 </nav>
 
