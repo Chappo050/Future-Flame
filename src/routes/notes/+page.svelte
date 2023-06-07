@@ -1,20 +1,12 @@
 <script lang="ts">
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
-	import { enhance, type SubmitFunction } from '$app/forms';
-
+	import { invalidate } from '$app/navigation';
 	//Load data
 	export let data: PageData;
 
 	//Grab posts from the data object
 	$: ({ posts } = data);
-
-	const handleSubmit: SubmitFunction = ({ data }: any) => {
-		console.log('data', data);
-
-		data.set('id', 'test');
-		return async () => {};
-	};
 
 	function deleteNote(postID: string): void {
 		const confirmDelete: ModalSettings = {
@@ -23,10 +15,10 @@
 			body: ' Are you sure you want to delete this note?',
 			response: async (r: boolean) => {
 				if (r) {
-					await fetch(`/api/protected?postID=${postID}`, {
+					await fetch(`/notes?postID=${postID}`, {
 						method: 'DELETE'
 					});
-
+					await invalidate(() => true);
 					toastStore.trigger({
 						message: 'Note Deleted Successfully',
 						background: 'variant-ghost-success'
@@ -43,8 +35,6 @@
 	}
 </script>
 
-<form method="post" class="hidden" action="?/delete" use:enhance={handleSubmit} />
-
 <div class="container h-full w-fit mx-auto flex">
 	<div class="p-5">
 		<div class="flex items-center justify-center">
@@ -56,7 +46,6 @@
 					<div class="card p-4 variant-soft relative flex flex-col gap-2">
 						<button
 							type="submit"
-							formAction="?/delete"
 							on:click={() => deleteNote(post.id)}
 							class="btn-icon btn-icon-sm variant-filled-error absolute -top-1.5 -right-1.5"
 							>X</button

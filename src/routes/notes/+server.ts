@@ -1,5 +1,5 @@
 // src/routes/api/protected-route/+server.ts
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '../api/protected/$types';
 import { json, error } from '@sveltejs/kit';
 
 export const DELETE: RequestHandler = async ({ url, locals: { supabase, getSession } }) => {
@@ -9,7 +9,7 @@ export const DELETE: RequestHandler = async ({ url, locals: { supabase, getSessi
 	if (!session) throw error(401, { message: 'Unauthorized' });
 	if (!postID) throw error(500, { message: 'Cannot find post ID' });
 
-	const { error: deleteError } = await supabase.from('posts').delete().eq('id', postID);
+	const { error: deleteError, data } = await supabase.from('posts').delete().eq('id', postID);
 
 	if (deleteError) {
 		console.log('Error', deleteError);
