@@ -4,14 +4,12 @@
 	import NoImage from '$lib/assets/image-not-found.jpeg';
 	import { createEventDispatcher } from 'svelte';
 	import { FileButton } from '@skeletonlabs/skeleton';
-	import { Avatar } from '@skeletonlabs/skeleton';
 	import MyProgessRadial from '../standardInterface/FFProgessRadial.svelte';
 
-	export let size = 10;
 	export let url: string;
 	export let supabase: SupabaseClient;
 
-	let avatar_url: string | undefined = undefined;
+	let bannerImage: string | undefined = undefined;
 	let uploading = false;
 	let loading = false;
 	let files: FileList;
@@ -20,14 +18,14 @@
 	const downloadImage = async (path: string) => {
 		loading = true;
 		try {
-			const { data, error } = await supabase.storage.from('avatars').download(path);
+			const { data, error } = await supabase.storage.from('banners').download(path);
 
 			if (error) {
 				throw error;
 			}
 
 			const url = URL.createObjectURL(data);
-			avatar_url = url;
+			bannerImage = url;
 		} catch (error) {
 			if (error instanceof Error) {
 				console.log('Error downloading image: ', error.message);
@@ -47,7 +45,7 @@
 			const fileExt = file.name.split('.').pop();
 			url = `${Math.random()}.${fileExt}`;
 
-			let { data, error } = await supabase.storage.from('avatars').upload(url, file);
+			let { data, error } = await supabase.storage.from('banners').upload(url, file);
 			if (error) {
 				throw error;
 			}
@@ -65,10 +63,14 @@
 </script>
 
 <div class=" flex-col text-center justify-center">
-	{#if avatar_url && !loading && !uploading}
-		<Avatar src={avatar_url} fallback={NoImage} width="w-32" rounded="rounded-full mx-auto" />
-	{:else if !avatar_url && !loading && !uploading}
-		<Avatar src={NoImage} width="w-32" rounded="rounded-full mx-auto" />
+	{#if bannerImage && !loading && !uploading}
+		<div class="w-full h-40 bg-gray-200 relative">
+			<img src={bannerImage} alt="banner" class="w-full h-full object-cover object-center" />
+		</div>
+	{:else if !bannerImage && !loading && !uploading}
+		<div class="w-full h-40 bg-gray-200 relative">
+			<img src={NoImage} alt="banner" class="w-full h-full object-cover object-center" />
+		</div>
 	{:else}
 		<MyProgessRadial />
 	{/if}
@@ -82,19 +84,19 @@
 		accept="image/*"
 		button="variant-soft-primary"
 		>Upload
-		<input type="hidden" name="avatar_url" value={url} />
+		<input type="hidden" name="bannerImage" value={url} />
 	</FileButton>
 </div>
 
 <!-- <div class=" flex-col text-center justify-center">
-	{#if avatar_url}
-		<Avatar src={avatar_url} width="w-32" rounded="rounded-full mx-auto" />
+	{#if bannerImage}
+		<Avatar src={bannerImage} width="w-32" rounded="rounded-full mx-auto" />
 	{:else}
 		<div class="avatar no-image" style="height: {size}em; width: {size}em;" />
 	{/if}
 
 	<FileButton
-		name="avatar_url"
+		name="bannerImage"
 		bind:files
 		on:change={uploadAvatar}
 		disabled={uploading}

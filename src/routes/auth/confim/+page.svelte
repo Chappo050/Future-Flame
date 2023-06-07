@@ -1,1 +1,1 @@
-<h1 class="h1">Please confirm email.</h1>
+<h1 class="h1">Please confirm your email.</h1>

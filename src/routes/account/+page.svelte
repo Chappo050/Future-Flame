@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from '$app/forms';
 	import Avatar from '$lib/components/account/Avatar.svelte';
-	import MyProgessRadial from '$lib/components/global/MyProgessRadial.svelte';
+	import MyProgessRadial from '$lib/components/standardInterface/FFProgessRadial.svelte';
 	import { InputChip, toastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	export let data;
 	export let form;

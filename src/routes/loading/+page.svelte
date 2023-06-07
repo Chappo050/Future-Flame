@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import MyProgessRadial from '$lib/components/global/MyProgessRadial.svelte';
+	import MyProgessRadial from '$lib/components/standardInterface/FFProgessRadial.svelte';
 
 	export let data;
 	$: {
