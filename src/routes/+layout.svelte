@@ -22,7 +22,7 @@
 	inject({ mode: dev ? 'development' : 'production' });
 
 	//Components
-	import SideNav from '$lib/components/SideNav.svelte';
+	import SideNav from '$lib/components/global/SideNav.svelte';
 	import Hamburger from '$lib/svgs/Hamburger.svelte';
 
 	//Other
