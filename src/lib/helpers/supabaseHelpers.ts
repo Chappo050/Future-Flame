@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { fail } from '@sveltejs/kit';
+
 /**
  * This function fetches an image from a specified Supabase storage bucket.
  * @param path - The path of the image within the storage bucket.
@@ -23,7 +23,14 @@ export const fetchImage = async (path: string, table: string, sb: SupabaseClient
 		}
 	}
 };
-
+/**
+ * This function uploads an image to a specified Supabase storage bucket.
+ * @param files - The file to be uploaded
+ * @param table - The name of the Supabase storage bucket.
+ * @param sb - An instance of the Supabase client.
+ * @returns A promise that resolves to a string representing the URL of the uploaded image.
+ * @throws Will throw an error if the image upload fails.
+ */
 export const uploadImage = async (files: FileList, table: string, sb: SupabaseClient) => {
 	try {
 		if (!files || files.length === 0) {
@@ -47,7 +54,13 @@ export const uploadImage = async (files: FileList, table: string, sb: SupabaseCl
 		}
 	}
 };
-
+/**
+ * This function fetches a users profile.
+ * @param user_id - The user to load from Supabase
+ * @param sb - An instance of the Supabase client.
+ * @returns A promise that resolves to an object with an avtar URL and userData object.
+ * @throws Will throw an error if the image download fails or userData fails to load.
+ */
 export const fetchUserProfile = async (user_id: string, sb: SupabaseClient) => {
 	try {
 		const { data, error: userError } = await sb

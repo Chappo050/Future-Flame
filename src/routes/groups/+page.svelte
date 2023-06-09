@@ -71,7 +71,7 @@
 		<div class="flex justify-center space-x-10">
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 m-5">
 				{#each groups as group}
-					{#if group.user_id == session?.user.id}
+					{#if group.user_id != session?.user.id}
 						<FfGroupCard {group} {supabase} />
 					{/if}
 				{/each}
