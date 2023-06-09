@@ -19,7 +19,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	return json({ success: true });
-	return json(data);
 }
 
 // export const POST: RequestHandler = async ({ request, url,  }) => {

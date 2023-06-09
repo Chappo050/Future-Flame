@@ -1,11 +1,25 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
 	import CreateGroupModal from '$lib/components/modals/createGroupModal.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';
-	import FfCard from '$lib/components/standardInterface/FFCard.svelte';
+	import FfCarousel from '$lib/components/standardInterface/FFCarousel.svelte';
+	import FfGroupCard from '$lib/components/standardInterface/FFGroupCard.svelte';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
-	export let data;
-	let { supabase } = data;
 
+	//Loaded data
+	export let data;
+	let groups: GroupData[] = [];
+	let { supabase, session } = data;
+	let myGroups: GroupData[] = [];
+	$: groups = data.groups || [];
+
+	$: if (groups) {
+		groups.forEach((group) => {
+			if (group.user_id == session?.user.id) {
+				myGroups.push(group);
+			}
+		});
+	}
 	//Component Modal
 	function modalComponentForm(): void {
 		const c = { ref: CreateGroupModal };
@@ -26,10 +40,12 @@
 							'content-type': 'application/json'
 						}
 					});
+					await invalidate(() => true);
 					toastStore.trigger({
-						message: 'Note Created Successfully',
+						message: 'Group Created Successfully',
 						background: 'variant-ghost-success'
 					});
+
 					return;
 				}
 				toastStore.trigger({
@@ -46,12 +62,19 @@
 	<div class="space-y-10 text-center flex flex-col items-center">
 		<h2 class="h2">Explore groups</h2>
 		<FfButtonPrimary clickAction={modalComponentForm} icon={null} label="Create" />
+		{#if myGroups.length}
+			<div class="flex justify-center space-x-10 m-16">
+				<FfCarousel {myGroups} {supabase} />
+			</div>
+		{/if}
+		<h3 class="h3">Find Groups</h3>
 		<div class="flex justify-center space-x-10">
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 m-5">
-				<FfCard />
-				<FfCard />
-				<FfCard />
-				<FfCard />
+				{#each groups as group}
+					{#if group.user_id == session?.user.id}
+						<FfGroupCard {group} {supabase} />
+					{/if}
+				{/each}
 			</div>
 		</div>
 	</div>
