@@ -15,6 +15,8 @@
 	const downloadImage = async (path: string) => {
 		loading = true;
 		src = (await fetchImage(path, 'banners', supabase)) as string;
+		console.log(src);
+
 		loading = false;
 	};
 
@@ -34,11 +36,11 @@
 
 <a
 	class="card card-hover overflow-hidden max-w-lg"
-	href="/elements/cards"
+	href="/groups/{group.id}"
 	in:fade={{ duration: 500 }}
 >
 	<header>
-		<img {src} class="bg-black/50 w-full aspect-[21/9]" alt="Post" />
+		<img {src} class="bg-black/50 w-full h-32" alt="Post" />
 	</header>
 	<div class="p-4 space-y-4">
 		<h3 class="h3" data-toc-ignore>{group.title}</h3>

@@ -32,13 +32,14 @@
 </script>
 
 <div class=" flex-col text-center justify-center">
+	<p>Banner Image</p>
 	{#if bannerImage && !loading && !uploading}
 		<header>
-			<img src={bannerImage} alt="banner" class="bg-black/50 w-full aspect-[21/9]" />
+			<img src={bannerImage} alt="banner" class="bg-black/50 w-full h-32" />
 		</header>
 	{:else if !bannerImage && !loading && !uploading}
 		<header>
-			<img src={NoImage} a alt="banner" class="bg-black/50 w-full aspect-[21/9]" />
+			<img src={NoImage} a alt="banner" class="bg-black/50 w-full h-32" />
 		</header>
 	{:else}
 		<MyProgessRadial />
