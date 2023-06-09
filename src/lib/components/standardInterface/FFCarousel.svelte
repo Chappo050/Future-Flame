@@ -13,16 +13,16 @@
 
 	onMount(() => {
 		updateItemsDisplayed();
-		window.addEventListener('resize', updateItemsDisplayed);
+		window?.addEventListener('resize', updateItemsDisplayed);
 		return () => {
-			window.removeEventListener('resize', updateItemsDisplayed);
+			window?.removeEventListener('resize', updateItemsDisplayed);
 		};
 	});
 
 	const updateItemsDisplayed = () => {
-		if (window.innerWidth >= 1280) {
+		if (window?.innerWidth >= 1280) {
 			itemsDisplayed = 3;
-		} else if (window.innerWidth >= 640) {
+		} else if (window?.innerWidth >= 640) {
 			itemsDisplayed = 2;
 		} else {
 			itemsDisplayed = 1;
@@ -36,15 +36,11 @@
 	const previous = () => {
 		index = Math.max(index - 1, 0);
 	};
-
-	$: if (window.innerWidth) {
-		updateItemsDisplayed();
-	}
 </script>
 
 <div class=" md:flex md:flex-row gap-1 md:gap-5 lg:gap-10">
 	<button
-		class="hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto"
+		class="hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 		on:click={previous}
 		disabled={index === 0}
 	>
@@ -57,14 +53,14 @@
 	</div>
 	<div class="block md:hidden">
 		<button
-			class="btn-icon btn-icon-sm h-10 w-10 my-auto"
+			class="btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 			on:click={previous}
 			disabled={index === 0}
 		>
 			<ArrowLeft />
 		</button>
 		<button
-			class="btn-icon btn-icon-sm h-10 w-10 my-auto"
+			class="btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 			on:click={next}
 			disabled={index >= myGroups.length - itemsDisplayed}
 		>
@@ -73,7 +69,7 @@
 	</div>
 
 	<button
-		class=" hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto"
+		class=" hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 		on:click={next}
 		disabled={index >= myGroups.length - itemsDisplayed}
 	>
