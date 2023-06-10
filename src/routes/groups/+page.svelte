@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import CreateGroupModal from '$lib/components/modals/createGroupModal.svelte';
-	import LoadingModal from '$lib/components/modals/loadingModal.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';
 	import FfCarousel from '$lib/components/standardInterface/FFCarousel.svelte';
 	import FfGroupCard from '$lib/components/standardInterface/FFGroupCard.svelte';
-	import { APIRequest } from '$lib/helpers/APIHelpers.js';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 
 	//Loaded data

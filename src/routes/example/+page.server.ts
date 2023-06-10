@@ -1,5 +1,5 @@
 // src/routes/posts/+page.server.ts
-import DataParser from '$lib/helpers/APIHelpers';
+import { formDataToObject } from '$lib/helpers/APIHelpers';
 import type { Actions } from './$types';
 import { error, fail } from '@sveltejs/kit';
 
@@ -16,7 +16,7 @@ export const actions: Actions = {
 		// we are safe, let the user create the post
 		//Data parser
 		const formData = await request.formData();
-		const data = DataParser.formDataToObject(formData);
+		const data = formDataToObject(formData);
 
 		const { error: createPostError, data: newPost } = await supabase.from('posts').insert(data);
 		console.log(createPostError);

@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import DataParser from '$lib/helpers/APIHelpers';
+import { formDataToObject } from '$lib/helpers/APIHelpers';
 
 export const load = (async ({ locals: { supabase, getSession } }) => {
 	const session = await getSession();
@@ -24,7 +24,7 @@ export const actions = {
 		const formData = await request.formData();
 		console.log(formData);
 
-		const data = DataParser.formDataToObject(formData);
+		const data = formDataToObject(formData);
 
 		const session = await getSession();
 		console.log('data', data);
