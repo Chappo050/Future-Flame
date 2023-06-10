@@ -6,10 +6,6 @@ export const load: PageLoad = async ({ parent }) => {
 	const { supabase, session } = await parent(); //Get session
 	console.log('loading data');
 
-	if (!session) {
-		throw redirect(303, '/');
-	}
-
 	const { data, error } = await supabase.from('groups').select('*');
 
 	const groups = data as GroupData[];
