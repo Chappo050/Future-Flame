@@ -26,14 +26,13 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 
 	const membersPayload = {
 		group_id: newGroup.id,
-		user_ids: [session.user.id]
+		user_id: session.user.id,
+		role: 'member'
 	};
 
 	const { error: insertMemberError, data: newMember } = await supabase
 		.from('members')
-		.insert(membersPayload)
-		.select()
-		.single();
+		.insert(membersPayload);
 
 	if (insertMemberError) {
 		console.log('Error creating member row', insertMemberError);
@@ -42,24 +41,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 	console.log('New Member', newMember);
 
-	//////Update Group//////////
-	const updateGroupMemberIdPayload = { members: newMember.id };
-
-	const { error: updateGroupMemberError, data: updatedGroup } = await supabase
-		.from('groups')
-		.update(updateGroupMemberIdPayload)
-		.eq('id', newGroup.id)
-		.select()
-		.single();
-
-	if (updateGroupMemberError) {
-		console.log('Error creating member row', insertMemberError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating member row' });
-	}
-	console.log('Updated Group', updatedGroup);
-	// return new Response(String(newGroup.id));
-	return json(updatedGroup);
+	return json(newGroup);
 }
 
 // export const POST: RequestHandler = async ({ request, url,  }) => {

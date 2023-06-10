@@ -7,7 +7,7 @@
 
 	//Loaded data
 	export let data;
-	let { supabase, session, group } = data;
+	let { supabase, session, groupData } = data;
 	let loadingBanner: boolean = false;
 	let bannerImage: string;
 
@@ -19,7 +19,7 @@
 		loadingBanner = false;
 	};
 
-	$: if (group) downloadImages(group.bannerImage);
+	$: if (groupData) downloadImages(groupData.bannerImage);
 
 	const joinButton = async (action: string) => {
 		switch (action) {
@@ -39,42 +39,6 @@
 				break;
 		}
 	};
-	// //Component Modal
-	// function modalComponentForm(): void {
-	// 	const c = { ref: CreateGroupModal };
-	// 	const modal: ModalSettings = {
-	// 		type: 'component',
-	// 		component: c,
-	// 		title: 'Custom Form Component',
-	// 		body: 'Complete the form below and then press submit.',
-	// 		meta: { supabase: supabase },
-	// 		response: async (r: any) => {
-	// 			if (r) {
-	// 				console.log(r);
-
-	// 				await fetch(`/groups`, {
-	// 					method: 'POST',
-	// 					body: JSON.stringify(r),
-	// 					headers: {
-	// 						'content-type': 'application/json'
-	// 					}
-	// 				});
-	// 				await invalidate(() => true);
-	// 				toastStore.trigger({
-	// 					message: 'Group Created Successfully',
-	// 					background: 'variant-ghost-success'
-	// 				});
-
-	// 				return;
-	// 			}
-	// 			toastStore.trigger({
-	// 				message: 'Creation cancelled.',
-	// 				background: 'variant-ghost-error'
-	// 			});
-	// 		}
-	// 	};
-	// 	modalStore.trigger(modal);
-	// }
 </script>
 
 <header>
@@ -83,12 +47,12 @@
 <div class="container mx-auto flex flex-col justify-center pt-10">
 	{#if session}
 		<FfButtonPrimary label="Join" clickAction={joinButton} />
-	{:else if group?.members}
+	{:else if groupData?.members}
 		<FfButtonPrimary label="Leave" clickAction={joinButton} />
 	{:else}
 		<FfButtonPrimary label="Sign Up" clickAction={joinButton} />
 	{/if}
 
-	<h2 class="h2">{group?.title}</h2>
-	<!-- <MemberList {supabase} userList={[]} /> -->
+	<h2 class="h2">{groupData?.title}</h2>
+	<MemberList {supabase} userList={groupData.members} />
 </div>

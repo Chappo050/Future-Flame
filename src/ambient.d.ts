@@ -13,6 +13,7 @@ interface ProfileData {
 	username: string;
 	avatar_url: string;
 	website: string;
+	role?: string;
 }
 
 interface MembersData {

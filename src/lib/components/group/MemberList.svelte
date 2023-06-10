@@ -1,44 +1,51 @@
 <script lang="ts">
-	import { fetchUserProfile } from '$lib/helpers/supabaseHelpers';
+	import { fetchImage } from '$lib/helpers/supabaseHelpers';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	interface loadedUser {
-		username: string;
-		avatarUrl: string;
-	}
+	import FfProgessRadial from '../standardInterface/FFProgessRadial.svelte';
 
 	export let supabase: SupabaseClient;
 	export let userList: ProfileData[];
+	console.log(' Got data', userList);
 
-	let avatarLoading: boolean = false;
-	let loadedUsers: loadedUser[];
+	// onMount(async () => {
+	// 	console.log('Fetching image');
 
-	const loadUser = async (userList: ProfileData[]) => {
-		for await (const iterator of userList) {
-			avatarLoading = true;
-			const response = await fetchUserProfile(iterator.avatar_url, supabase);
-			if (response) {
-				loadedUsers.push({
-					username: response.userData.username,
-					avatarUrl: response.avatarUrl || ''
-				});
-			}
+	// 	for (let user of userList) {
+	// 		user.avatar_url = (await fetchImage(user.avatar_url, 'avatars', supabase)) || '';
+	// 	}
+	// });
 
-			avatarLoading = false;
-		}
-	};
+	// $: if (userList) {
+	// 	console.log('test', );
 
-	$: if (userList) loadUser(userList);
+	// 	(async () => {
+	// 		for (let user of userList) {
+	// 			user.avatar_url = (await fetchImage(user.avatar_url, 'avatars', supabase)) || '';
+	// 		}
+	// 	})();
+	// }
 </script>
 
-<dl class="list-dl">
-	{#each loadedUsers as user}
-		<div>
-			<Avatar src={user.avatarUrl} width="w-32" rounded="rounded-full" />
-			<span class="flex-auto">
-				<dt>{user.username}</dt>
-				<dd>Description</dd>
-			</span>
-		</div>
-	{/each}
+<dl class="list-nav w-max-lg">
+	<ul>
+		{#each userList as user}
+			<li>
+				<a href="/profile/{user.id}">
+					{#await fetchImage(user.avatar_url, 'avatars', supabase) || ''}
+						<FfProgessRadial size="w-12" />
+					{:then src}
+						<Avatar {src} width="w-12" rounded="rounded-full" />
+					{/await}
+
+					<span class="flex-auto">
+						<dt>{user.username}</dt>
+						{#if user.role}
+							<dd>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</dd>
+						{/if}
+					</span>
+				</a>
+			</li>
+		{/each}
+	</ul>
 </dl>
