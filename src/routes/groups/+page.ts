@@ -4,6 +4,7 @@ import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ parent }) => {
 	const { supabase, session } = await parent(); //Get session
+	console.log('loading data');
 
 	if (!session) {
 		throw redirect(303, '/');
@@ -18,6 +19,7 @@ export const load: PageLoad = async ({ parent }) => {
 			supabaseErrorMessage: error.message
 		});
 	}
+	console.log('GOT', groups);
 
 	return { session, groups };
 };

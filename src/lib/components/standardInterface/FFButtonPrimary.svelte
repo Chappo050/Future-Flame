@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let icon: any | null;
+	export let icon: any | null = undefined;
 	export let label: String;
 	export let clickAction: Function;
 </script>

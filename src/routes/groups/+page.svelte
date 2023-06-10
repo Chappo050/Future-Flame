@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import CreateGroupModal from '$lib/components/modals/createGroupModal.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';
 	import FfCarousel from '$lib/components/standardInterface/FFCarousel.svelte';
 	import FfGroupCard from '$lib/components/standardInterface/FFGroupCard.svelte';
+	import { APIRequest } from '$lib/helpers/API-helpers.js';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 
 	//Loaded data
@@ -14,6 +15,8 @@
 	$: groups = data.groups || [];
 
 	$: if (groups) {
+		console.log(groups.length);
+		myGroups = [];
 		groups.forEach((group) => {
 			if (group.user_id == session?.user.id) {
 				myGroups.push(group);
@@ -31,16 +34,9 @@
 			meta: { supabase: supabase },
 			response: async (r: any) => {
 				if (r) {
-					console.log(r);
+					const response = await APIRequest('/groups', 'POST', r);
+					goto(`/groups/${response.id}`);
 
-					await fetch(`/groups`, {
-						method: 'POST',
-						body: JSON.stringify(r),
-						headers: {
-							'content-type': 'application/json'
-						}
-					});
-					await invalidate(() => true);
 					toastStore.trigger({
 						message: 'Group Created Successfully',
 						background: 'variant-ghost-success'

@@ -21,6 +21,24 @@
 
 	$: if (group) downloadImages(group.bannerImage);
 
+	const joinButton = async (action: string) => {
+		switch (action) {
+			case 'join':
+				console.log('join');
+				break;
+
+			case 'leave':
+				console.log('leave');
+				break;
+
+			case 'signup':
+				console.log('Sign Up');
+				break;
+
+			default:
+				break;
+		}
+	};
 	// //Component Modal
 	// function modalComponentForm(): void {
 	// 	const c = { ref: CreateGroupModal };
@@ -63,6 +81,14 @@
 	<img src={bannerImage} class="bg-black/50 w-full h-32" alt="Post" />
 </header>
 <div class="container mx-auto flex flex-col justify-center pt-10">
+	{#if session}
+		<FfButtonPrimary label="Join" clickAction={joinButton} />
+	{:else if group?.members}
+		<FfButtonPrimary label="Leave" clickAction={joinButton} />
+	{:else}
+		<FfButtonPrimary label="Sign Up" clickAction={joinButton} />
+	{/if}
+
 	<h2 class="h2">{group?.title}</h2>
 	<!-- <MemberList {supabase} userList={[]} /> -->
 </div>

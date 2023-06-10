@@ -1,4 +1,4 @@
-const DataParser = {
+export const DataParser = {
 	formDataToObject(formData: FormData): Record<string, any> {
 		const result: Record<string, any> = {};
 
@@ -16,4 +16,14 @@ const DataParser = {
 	}
 };
 
-export default DataParser;
+export const APIRequest = async (path: string, method: string, body: object) => {
+	const response = await fetch(path, {
+		method: method,
+		body: JSON.stringify(body),
+		headers: {
+			'content-type': 'application/json'
+		}
+	});
+	const responseData = await response.json();
+	return responseData;
+};

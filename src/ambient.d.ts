@@ -4,6 +4,7 @@ interface GroupData {
 	description: string;
 	bannerImage: string;
 	user_id: string;
+	members: ProfileData[];
 }
 
 interface ProfileData {
@@ -12,4 +13,10 @@ interface ProfileData {
 	username: string;
 	avatar_url: string;
 	website: string;
+}
+
+interface MembersData {
+	id: number;
+	group_id: number;
+	user_ids: string[];
 }
