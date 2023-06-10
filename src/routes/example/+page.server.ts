@@ -1,5 +1,5 @@
 // src/routes/posts/+page.server.ts
-import DataParser from '$lib/helpers/API-helpers';
+import DataParser from '$lib/helpers/APIHelpers';
 import type { Actions } from './$types';
 import { error, fail } from '@sveltejs/kit';
 

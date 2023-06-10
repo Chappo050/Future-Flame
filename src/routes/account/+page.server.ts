@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import DataParser from '$lib/helpers/API-helpers';
+import DataParser from '$lib/helpers/APIHelpers';
 
 export const load = (async ({ locals: { supabase, getSession } }) => {
 	const session = await getSession();

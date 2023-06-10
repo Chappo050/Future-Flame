@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import CreateGroupModal from '$lib/components/modals/createGroupModal.svelte';
+	import LoadingModal from '$lib/components/modals/loadingModal.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';
 	import FfCarousel from '$lib/components/standardInterface/FFCarousel.svelte';
 	import FfGroupCard from '$lib/components/standardInterface/FFGroupCard.svelte';
-	import { APIRequest } from '$lib/helpers/API-helpers.js';
+	import { APIRequest } from '$lib/helpers/APIHelpers.js';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 
 	//Loaded data
@@ -12,6 +13,7 @@
 	let groups: GroupData[] = [];
 	let { supabase, session } = data;
 	let myGroups: GroupData[] = [];
+	// let createLoading: boolean = false;
 	$: groups = data.groups || [];
 
 	$: if (groups) {
@@ -23,8 +25,8 @@
 			}
 		});
 	}
-	//Component Modal
-	function modalComponentForm(): void {
+	//Component Modal For Group Form
+	function createGroupModalComponentForm(): void {
 		const c = { ref: CreateGroupModal };
 		const modal: ModalSettings = {
 			type: 'component',
@@ -34,13 +36,23 @@
 			meta: { supabase: supabase },
 			response: async (r: any) => {
 				if (r) {
-					const response = await APIRequest('/groups', 'POST', r);
-					goto(`/groups/${response.id}`);
+					// createLoading = true;
+					// const response = await APIRequest('/groups', 'POST', r);
 
-					toastStore.trigger({
-						message: 'Group Created Successfully',
-						background: 'variant-ghost-success'
-					});
+					if (r.success) {
+						toastStore.trigger({
+							message: 'Group Created Successfully',
+							background: 'variant-ghost-success'
+						});
+						// createLoading = false;
+						goto(`/groups/${r.response.id}`);
+					} else {
+						toastStore.trigger({
+							message: 'Group Creation Failed, Please Try Again',
+							background: 'variant-ghost-error'
+						});
+						// createLoading = false;
+					}
 
 					return;
 				}
@@ -57,7 +69,7 @@
 <div class="container h-full mx-auto flex justify-center pt-10">
 	<div class="space-y-10 text-center flex flex-col items-center">
 		<h2 class="h2">Explore groups</h2>
-		<FfButtonPrimary clickAction={modalComponentForm} icon={null} label="Create" />
+		<FfButtonPrimary clickAction={createGroupModalComponentForm} icon={null} label="Create" />
 		{#if myGroups.length}
 			<div class="flex justify-center space-x-10 m-16">
 				<FfCarousel {myGroups} {supabase} />
