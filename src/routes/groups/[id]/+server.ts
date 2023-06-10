@@ -9,7 +9,8 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 
 	if (!session) throw error(401, { message: 'Unauthorized' });
 
-	const { error: deleteError, data } = await supabase.from('groups').update('');
+	const { error: deleteError, data } = await supabase.from('members').update('');
+
 	console.log(data);
 
 	if (deleteError) {
