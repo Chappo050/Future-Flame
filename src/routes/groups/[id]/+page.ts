@@ -61,7 +61,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 		const profile = groupMemberProfileData.find((profile) => profile.id === member.user_id);
 		if (profile) {
 			return {
-				user_id: member.user_id,
+				id: member.user_id,
 				username: profile.username,
 				avatar_url: profile.avatar_url,
 				role: member.role

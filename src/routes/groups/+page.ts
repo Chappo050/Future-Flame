@@ -8,14 +8,31 @@ export const load: PageLoad = async ({ parent }) => {
 
 	const { data, error } = await supabase.from('groups').select('*');
 
-	const groups = data as GroupData[];
+	const groupNoCount = data as GroupData[];
 
 	if (error) {
 		return fail(500, {
 			supabaseErrorMessage: error.message
 		});
 	}
-	console.log('GOT', groups);
+
+	const { data: memberCount, error: memberCountError } = await supabase
+		.from('group_members_count')
+		.select('*');
+
+	console.log('GOT', groupNoCount, memberCount);
+
+	if (memberCountError) {
+		console.error('Error retrieving data from view:', memberCountError);
+		return fail(500, {
+			supabaseErrorMessage: memberCountError.message
+		});
+	}
+	const groups: GroupData[] = groupNoCount.map((group) => {
+		const count = memberCount.find((item) => item.group_id == group.id);
+		group.memberCount = count?.member_count | 0;
+		return group;
+	});
 
 	return { session, groups };
 };

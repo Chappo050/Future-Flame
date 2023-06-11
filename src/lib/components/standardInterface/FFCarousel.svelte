@@ -38,20 +38,20 @@
 	};
 </script>
 
-<div class=" md:flex md:flex-row gap-1 md:gap-5 lg:gap-10">
+<div class=" lg:flex lg:flex-row gap-1 lg:gap-10">
 	<button
-		class="hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
+		class="hidden lg:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 		on:click={previous}
 		disabled={index === 0}
 	>
 		<ArrowLeft />
 	</button>
-	<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 		{#each myGroups.slice(index, index + itemsDisplayed) as group (group.id)}
 			<FfGroupCard {group} {supabase} />
 		{/each}
 	</div>
-	<div class="block md:hidden">
+	<div class="block lg:hidden">
 		<button
 			class="btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 			on:click={previous}
@@ -69,7 +69,7 @@
 	</div>
 
 	<button
-		class=" hidden md:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
+		class=" hidden lg:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
 		on:click={next}
 		disabled={index >= myGroups.length - itemsDisplayed}
 	>

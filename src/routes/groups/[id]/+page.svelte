@@ -33,7 +33,7 @@
 	$: if (data) {
 		({ supabase, session, groupData } = data);
 	}
-	// $: if (groupData) downloadImages(groupData.bannerImage);
+	$: if (groupData) downloadImages(groupData.bannerImage);
 	$: if (groupData) {
 		joinLoading = true;
 		if (!session) {
@@ -41,6 +41,7 @@
 		} else {
 			//Check admin
 			isAdmin = groupData.members.some((item) => item.role === 'admin');
+			console.log(session.user.id, groupData.members);
 
 			//Check user member status
 			const userExists = groupData.members.some((item) => item.id === session?.user.id);
@@ -106,7 +107,7 @@
 	<h2 class="h2 text-center my-5">{groupData?.title}</h2>
 
 	<GroupInfo {groupData} />
-	<div class=" hidden md:flex justify-end">
+	<div class=" hidden lg:flex justify-end">
 		{#if session && groupData?.members}
 			<MemberList {supabase} userList={groupData.members} />
 		{/if}
@@ -119,7 +120,6 @@
 				clickAction={() => goto(`${window.location.pathname}/edit`)}
 			/>
 		{/if}
-
 		{#if session && !joinLoading && joinAction == 'join'}
 			<FfButtonPrimary label="Join" clickAction={() => joinButton(joinAction)} />
 		{:else if joinAction == 'leave' && !joinLoading}

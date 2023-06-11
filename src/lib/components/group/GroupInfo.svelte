@@ -4,7 +4,7 @@
 	export let groupData: GroupData | null | undefined;
 </script>
 
-<div class="w-full px-5 lg:px-0">
+<div class="w-full px-5">
 	<TabGroup>
 		<Tab bind:group={tabSet} name="tab1" value={0}>Mission</Tab>
 		<Tab bind:group={tabSet} name="tab2" value={1}>Location</Tab>

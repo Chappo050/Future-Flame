@@ -46,7 +46,7 @@
 		<h3 class="h3" data-toc-ignore>{group.title}</h3>
 		<article class="">
 			<p>
-				{group.description}
+				{group.mission}
 			</p>
 		</article>
 	</div>
@@ -55,7 +55,7 @@
 		<Avatar src={avatarUrl} width="w-8" />
 		<div class="flex-auto flex justify-between items-center">
 			<h6 class="font-bold">{username}</h6>
-			<small>On {new Date().toLocaleDateString()}</small>
+			<small>Members - {group.memberCount}</small>
 		</div>
 	</footer>
 </a>

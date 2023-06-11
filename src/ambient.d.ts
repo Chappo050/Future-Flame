@@ -5,6 +5,7 @@ interface GroupData {
 	bannerImage: string;
 	user_id: string;
 	members?: ProfileData[];
+	memberCount?: number;
 }
 
 interface ProfileData {
