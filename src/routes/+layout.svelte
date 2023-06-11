@@ -72,7 +72,7 @@
 			padding="py-1 px-5"
 		>
 			<svelte:fragment slot="lead">
-				<a href="/" class=" p-0 m-0 hidden md:block"
+				<a href="/" class=" p-0 m-0 hidden lg:block"
 					><img src={logo} class="h-12" alt="Future Flame Logo" />
 				</a>
 				<div class="flex items-center">
@@ -83,7 +83,7 @@
 					</button>
 				</div>
 			</svelte:fragment>
-			<a href="/" class=" block md:hidden p-0 m-0"
+			<a href="/" class=" block lg:hidden p-0 m-0"
 				><img src={logo} class="h-12" alt="Future Flame Logo" />
 			</a>
 

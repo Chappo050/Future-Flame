@@ -14,7 +14,7 @@ export const formDataToObject = (formData: FormData): Record<string, any> => {
 	return result;
 };
 
-export const APIRequest = async (path: string, method: string, body: object) => {
+export const APIRequest = async (path: string, method: string, body?: any) => {
 	const response = await fetch(path, {
 		method: method,
 		body: JSON.stringify(body),

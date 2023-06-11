@@ -1,10 +1,10 @@
 interface GroupData {
 	id: number;
 	title: string;
-	description: string;
+	mission: string;
 	bannerImage: string;
 	user_id: string;
-	members: ProfileData[];
+	members?: ProfileData[];
 }
 
 interface ProfileData {
@@ -19,5 +19,5 @@ interface ProfileData {
 interface MembersData {
 	id: number;
 	group_id: number;
-	user_ids: string[];
+	user_id: string;
 }

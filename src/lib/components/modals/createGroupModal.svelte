@@ -18,7 +18,7 @@
 	// Form Data
 	const formData = {
 		title: '',
-		description: '',
+		mission: '',
 		// email: '',
 		bannerImage: ''
 	};
@@ -39,7 +39,7 @@
 	}
 
 	$: formData.bannerImage = bannerURL;
-	$: isDisabled = !formData.title || !formData.description || !formData.bannerImage || !bannerURL;
+	$: isDisabled = !formData.title || !formData.mission || !formData.bannerImage || !bannerURL;
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
@@ -65,16 +65,22 @@
 						type="text"
 						bind:value={formData.title}
 						placeholder="Enter name..."
+						maxlength="30"
 					/>
 				</label>
-				<label class="label">
-					<span>Description</span>
-					<input
-						class="input"
-						type="text"
-						bind:value={formData.description}
-						placeholder="Enter description..."
+
+				<label class="label relative">
+					<span>Mission</span>
+					<textarea
+						class="textarea"
+						rows="12"
+						bind:value={formData.mission}
+						placeholder="Enter this groups mission..."
+						maxlength="600"
 					/>
+					<span id="wordCount" class="absolute bottom-2 right-2 text-gray-500"
+						>{formData.mission.length} / 600</span
+					>
 				</label>
 			</form>
 			<!-- prettier-ignore -->

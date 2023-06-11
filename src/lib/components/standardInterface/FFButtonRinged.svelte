@@ -7,7 +7,7 @@
 <button
 	type="button"
 	on:click={() => clickAction()}
-	class="btn lg:max-h-10 max-h-6 variant-filled-primary"
+	class="btn lg:max-h-10 max-h-6 variant-ringed-primary"
 >
 	{#if icon}
 		<span>{icon}</span>

@@ -1,13 +1,9 @@
-// src/routes/api/protected-route/+server.ts
 import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
-export async function POST({ request, locals: { supabase, getSession } }) {
+export async function GET({ request, locals: { getSession, supabase } }) {
 	const incomingData = await request.json();
-
 	const session = await getSession();
-
-	if (!session) throw error(401, { message: 'Unauthorized' });
 	//////Create Group//////////
 	const { error: insertGroupError, data: newGroup } = await supabase
 		.from('groups')
@@ -43,8 +39,3 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 
 	return json(newGroup);
 }
-
-// export const POST: RequestHandler = async ({ request, url,  }) => {
-// 	console.log('REQUEST', request);
-
-// };

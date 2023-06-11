@@ -6,33 +6,16 @@
 
 	export let supabase: SupabaseClient;
 	export let userList: ProfileData[];
-	console.log(' Got data', userList);
-
-	// onMount(async () => {
-	// 	console.log('Fetching image');
-
-	// 	for (let user of userList) {
-	// 		user.avatar_url = (await fetchImage(user.avatar_url, 'avatars', supabase)) || '';
-	// 	}
-	// });
-
-	// $: if (userList) {
-	// 	console.log('test', );
-
-	// 	(async () => {
-	// 		for (let user of userList) {
-	// 			user.avatar_url = (await fetchImage(user.avatar_url, 'avatars', supabase)) || '';
-	// 		}
-	// 	})();
-	// }
 </script>
 
-<dl class="list-nav w-max-lg">
+<dl class="list-nav w-max-lg max-h-40 overflow-auto">
+	<p class="text-center">Member List</p>
+	<hr />
 	<ul>
 		{#each userList as user}
 			<li>
 				<a href="/profile/{user.id}">
-					{#await fetchImage(user.avatar_url, 'avatars', supabase) || ''}
+					{#await fetchImage(user.avatar_url, 'avatars', supabase) || ''}) || ''}
 						<FfProgessRadial size="w-12" />
 					{:then src}
 						<Avatar {src} width="w-12" rounded="rounded-full" />
@@ -48,4 +31,9 @@
 			</li>
 		{/each}
 	</ul>
+	{#if userList.length == 1}
+		<p class="text-center">{userList.length} Member</p>
+	{:else}
+		<p class="text-center">{userList.length} Members</p>
+	{/if}
 </dl>
