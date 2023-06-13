@@ -9,6 +9,29 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 
 	if (!session) throw error(401, { message: 'Unauthorized' });
 	//////Create Group//////////
+
+	//Clean title
+	const cleanedTitle: string = incomingData.title.trim().replace(/\s+/g, '-');
+	incomingData.slug = cleanedTitle;
+
+	//Check if group name already exists
+
+	const { error: checkGroupError, data: checkGroup } = await supabase
+		.from('groups')
+		.select()
+		.eq('slug', cleanedTitle);
+
+	console.log(checkGroup);
+
+	if (checkGroupError) {
+		console.log('Error checking group name', checkGroupError);
+		// the user is not signed in
+		throw error(500, { message: 'Error checking group name' });
+	}
+
+	//Return null for error
+	if (checkGroup.length) return json({ error: 'Group Name Already Exists.' });
+
 	const { error: insertGroupError, data: newGroup } = await supabase
 		.from('groups')
 		.insert(incomingData)

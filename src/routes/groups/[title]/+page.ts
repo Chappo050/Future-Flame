@@ -4,12 +4,12 @@ import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ parent, params }) => {
 	const { supabase, session } = await parent(); //Get session
-	const groupId = params.id;
+	const groupSlug = params.title;
 
 	const { data: groupData, error: groupError } = await supabase
 		.from('groups')
 		.select(`*`)
-		.eq('id', groupId)
+		.eq('slug', groupSlug)
 		.single();
 
 	if (groupError) {
@@ -25,7 +25,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 	const { data: memberData, error: memberError } = await supabase
 		.from('members')
 		.select(`*`)
-		.eq('group_id', groupId);
+		.eq('group_id', groupData.id);
 
 	console.log('Member Data', memberData);
 

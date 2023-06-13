@@ -14,6 +14,7 @@
 	let supabase: SupabaseClient = $modalStore[0].meta.supabase;
 	let loading: boolean = false;
 	let isDisabled: boolean;
+	let errorMessage: string;
 	//Functions
 	// Form Data
 	const formData = {
@@ -31,11 +32,13 @@
 		const response = await APIRequest('/groups', 'POST', formData);
 		loading = false;
 
-		if ($modalStore[0].response && response.id)
+		if ($modalStore[0].response && response.id) {
 			$modalStore[0].response({ success: true, response });
-		else if ($modalStore[0].response) $modalStore[0].response({ success: false, response });
-
-		modalStore.close();
+			modalStore.close();
+		} else if (response.error) {
+			console.log('BIG ERROR');
+			errorMessage = response.error;
+		} else if ($modalStore[0].response) $modalStore[0].response({ success: false, response });
 	}
 
 	$: formData.bannerImage = bannerURL;
@@ -58,6 +61,12 @@
 			<!-- Enable for debugging: -->
 			<form class="modal-form {cForm} ">
 				<BannerUpload {supabase} bind:url={bannerURL} />
+
+				{#if errorMessage}
+					<div class=" text-center h3 variant-filled-error">
+						{errorMessage}
+					</div>
+				{/if}
 				<label class="label">
 					<span>Title</span>
 					<input

@@ -4,6 +4,7 @@
 
 	import { fade, slide } from 'svelte/transition';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import GroupSVG from '$lib/svgs/GroupSVG.svelte';
 	export let group: GroupData;
 	export let supabase: SupabaseClient;
 	let src: string;
@@ -36,7 +37,7 @@
 
 <a
 	class="card card-hover overflow-hidden max-w-lg"
-	href="/groups/{group.id}"
+	href="/groups/{group.slug}"
 	in:fade={{ duration: 500 }}
 >
 	<header>
@@ -55,7 +56,7 @@
 		<Avatar src={avatarUrl} width="w-8" />
 		<div class="flex-auto flex justify-between items-center">
 			<h6 class="font-bold">{username}</h6>
-			<small>Members - {group.memberCount}</small>
+			<small class="flex gap-2"><GroupSVG />{group.memberCount}</small>
 		</div>
 	</footer>
 </a>

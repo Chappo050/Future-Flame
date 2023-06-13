@@ -1,8 +1,12 @@
+<script lang="ts">
+	export let size = 21;
+</script>
+
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 48 48"
-	width="21px"
-	height="21px"
+	width="{size}px"
+	height="{size}px"
 	class="svelte-10a6av0"
 	><path
 		fill="#FFC107"

@@ -43,7 +43,7 @@
 							background: 'variant-ghost-success'
 						});
 						// createLoading = false;
-						goto(`/groups/${r.response.id}`);
+						goto(`/groups/${r.response.slug}`);
 					} else {
 						toastStore.trigger({
 							message: 'Group Creation Failed, Please Try Again',

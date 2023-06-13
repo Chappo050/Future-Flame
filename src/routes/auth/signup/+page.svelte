@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from '$app/forms';
-	import Google from '$lib/svgs/Google.svelte';
+	import GoogleSVG from '$lib/svgs/GoogleSVG.svelte';
 	const submitSocialLogin: SubmitFunction = async ({ action, cancel }: any) => {};
 </script>
 
@@ -34,6 +34,6 @@
 		use:enhance={submitSocialLogin}
 	>
 		<div class="py-5" />
-		<button class="btn variant-filled flex gap-2"><Google /> Google</button>
+		<button class="btn variant-filled flex gap-2"><GoogleSVG /> Google</button>
 	</form>
 </main>
