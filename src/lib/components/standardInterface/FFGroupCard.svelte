@@ -10,7 +10,6 @@
 
 	export let group: GroupData;
 	export let supabase: SupabaseClient;
-	let src: string;
 	let avatarUrl: string;
 	let loading: boolean = false;
 	let username: string;
@@ -18,10 +17,11 @@
 
 	const downloadImage = async (path: string) => {
 		loading = true;
-		src = (await fetchImage(path, 'banners', supabase)) as string;
+		const src = (await fetchImage(path, 'banners', supabase)) as string;
 		console.log(src);
 
 		loading = false;
+		return src;
 	};
 
 	const loadUser = async (user_id: string) => {
@@ -34,7 +34,6 @@
 
 		avatarLoading = false;
 	};
-	$: if (group.bannerImage) downloadImage(group.bannerImage);
 	$: if (group.user_id) loadUser(group.user_id);
 </script>
 
@@ -44,7 +43,9 @@
 	in:fade={{ duration: 500 }}
 >
 	<header>
-		<img {src} class="bg-black/50 w-full h-32" alt="Post" />
+		{#await downloadImage(group.bannerImage) then src}
+			<img {src} class="bg-black/50 w-full h-32" alt="Post" />
+		{/await}
 	</header>
 	<div class="p-4 space-y-4">
 		<h3 class="h3" data-toc-ignore>{group.title}</h3>
