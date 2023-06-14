@@ -6,6 +6,8 @@
 	import FfGroupCard from '$lib/components/standardInterface/FFGroupCard.svelte';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 
+	//Icons
+
 	//Loaded data
 	export let data;
 	let groups: GroupData[] = [];
@@ -67,7 +69,12 @@
 <div class="container h-full mx-auto flex justify-center pt-10">
 	<div class="space-y-10 text-center flex flex-col items-center">
 		<h2 class="h2">Explore groups</h2>
-		<FfButtonPrimary clickAction={createGroupModalComponentForm} icon={null} label="Create" />
+
+		<FfButtonPrimary
+			clickAction={createGroupModalComponentForm}
+			icon={'faCirclePlus'}
+			label="Create"
+		/>
 		{#if myGroups.length}
 			<div class="flex justify-center space-x-10 m-16">
 				<FfCarousel {myGroups} {supabase} />

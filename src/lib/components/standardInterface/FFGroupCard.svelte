@@ -4,7 +4,10 @@
 
 	import { fade, slide } from 'svelte/transition';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import GroupSVG from '$lib/svgs/GroupSVG.svelte';
+
+	import Fa from 'svelte-fa';
+	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
+
 	export let group: GroupData;
 	export let supabase: SupabaseClient;
 	let src: string;
@@ -56,7 +59,9 @@
 		<Avatar src={avatarUrl} width="w-8" />
 		<div class="flex-auto flex justify-between items-center">
 			<h6 class="font-bold">{username}</h6>
-			<small class="flex gap-2"><GroupSVG />{group.memberCount}</small>
+			<small class="flex gap-2"
+				><Fa class="mx-auto my-auto" icon={faPeopleGroup} size="1.5x" /> {group.memberCount}</small
+			>
 		</div>
 	</footer>
 </a>

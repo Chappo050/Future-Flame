@@ -3,11 +3,26 @@ import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function PUT({ request, locals: { supabase, getSession } }) {
-	const { groupId, action } = await request.json();
+	const { groupSlug, action } = await request.json();
 
 	const session = await getSession();
 
 	if (!session) throw error(401, { message: 'Unauthorized' });
+
+	//Slug to uuid
+	const { error: selectGroupError, data: groupFromSlug } = await supabase
+		.from('groups')
+		.select('id')
+		.eq('slug', groupSlug)
+		.single();
+
+	const groupId = groupFromSlug?.id;
+
+	if (selectGroupError) {
+		console.log('Error selecting group row', selectGroupError);
+		// the user is not signed in
+		throw error(500, { message: 'Error selecting group row' });
+	}
 
 	if (action == 'join') {
 		await joinGroup(groupId, session, supabase);

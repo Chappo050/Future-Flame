@@ -58,13 +58,13 @@
 	const joinButton = async (action: string) => {
 		joinLoading = true;
 		const url = window.location.href;
-		const groupId = url.split('/').pop();
+		const groupSlug = url.split('/').pop();
 
 		switch (action) {
 			case 'join':
 				console.log('join');
 				const responseJoin = await APIRequest(window.location.pathname, 'PUT', {
-					groupId,
+					groupSlug: groupSlug,
 					action: 'join'
 				});
 				if (responseJoin.success) {
@@ -78,7 +78,7 @@
 			case 'leave':
 				console.log('leave');
 				const responseLeave = await APIRequest(window.location.pathname, 'PUT', {
-					groupId,
+					groupSlug: groupSlug,
 					action: 'leave'
 				});
 				if (responseLeave.success) {
