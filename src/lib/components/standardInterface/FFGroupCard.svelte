@@ -18,8 +18,6 @@
 	const downloadImage = async (path: string) => {
 		loading = true;
 		const src = (await fetchImage(path, 'banners', supabase)) as string;
-		console.log(src);
-
 		loading = false;
 		return src;
 	};

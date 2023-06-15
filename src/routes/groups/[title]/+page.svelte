@@ -40,11 +40,13 @@
 			joinAction = 'signup';
 		} else {
 			//Check admin
-			isAdmin = groupData.members.some((item) => item.role === 'admin');
-			console.log(session.user.id, groupData.members);
+			isAdmin = groupData?.members.find(
+				(user) => user.role === 'admin' && user.id === session.user.id
+			);
+			console.log('Group admin check', session.user.id, groupData.members, isAdmin);
 
 			//Check user member status
-			const userExists = groupData.members.some((item) => item.id === session?.user.id);
+			const userExists = groupData?.members.some((item) => item.id === session?.user.id);
 			console.log('User Exists', userExists);
 
 			if (userExists) {

@@ -17,7 +17,7 @@
 				{#each userList as user}
 					<li>
 						<a href="/profile/{user.id}">
-							{#await fetchImage(user.avatar_url, 'avatars', supabase) || ''}) || ''}
+							{#await fetchImage(user.avatar_url, 'avatars', supabase)}
 								<FfProgessRadial size="w-12" />
 							{:then src}
 								<Avatar {src} width="w-12" rounded="rounded-full" />
