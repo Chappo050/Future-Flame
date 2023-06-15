@@ -1,4 +1,5 @@
 // src/routes/api/protected-route/+server.ts
+import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
@@ -18,11 +19,7 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 
 	const groupId = groupFromSlug?.id;
 
-	if (selectGroupError) {
-		console.log('Error selecting group row', selectGroupError);
-		// the user is not signed in
-		throw error(500, { message: 'Error selecting group row' });
-	}
+	handleError(selectGroupError, 'Error selecting group row');
 
 	if (action == 'join') {
 		await joinGroup(groupId, session, supabase);
@@ -48,11 +45,8 @@ async function leaveGroup(groupId: string, session: any, supabase: any) {
 		.eq('group_id', groupId)
 		.single();
 
-	if (selectMemberError) {
-		console.log('Error selecting member row', selectMemberError);
-		// the user is not signed in
-		throw error(500, { message: 'Error selecting member row' });
-	}
+	handleError(selectMemberError, 'Error selecting member row');
+
 	console.log('New Member', selectedMember);
 
 	const { error: deleteError, data: deleteData } = await supabase
@@ -61,11 +55,8 @@ async function leaveGroup(groupId: string, session: any, supabase: any) {
 		.eq('id', selectedMember.id)
 		.eq('group_id', groupId);
 
-	if (deleteError) {
-		console.log('Error deleting member row', deleteError);
-		// the user is not signed in
-		throw error(500, { message: 'Error deleting member row' });
-	}
+	handleError(deleteError, 'Error deleting member row');
+
 	console.log('Delete data', deleteData);
 }
 
@@ -81,10 +72,7 @@ async function joinGroup(groupId: string, session: any, supabase: any) {
 		.from('members')
 		.insert(membersPayload);
 
-	if (insertMemberError) {
-		console.log('Error creating member row', insertMemberError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating member row' });
-	}
+	handleError(insertMemberError, 'Error creating member row');
+
 	console.log('New Member', newMember);
 }

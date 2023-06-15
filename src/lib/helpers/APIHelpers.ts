@@ -1,3 +1,5 @@
+import { error } from '@sveltejs/kit';
+
 export const formDataToObject = (formData: FormData): Record<string, any> => {
 	const result: Record<string, any> = {};
 
@@ -24,4 +26,11 @@ export const APIRequest = async (path: string, method: string, body?: any) => {
 	});
 	const responseData = await response.json();
 	return responseData;
+};
+
+export const handleError = (err: any, message: string) => {
+	if (err) {
+		console.log(`ERROR ${message}`, err);
+		throw error(500, { message: message });
+	}
 };

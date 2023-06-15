@@ -2,11 +2,12 @@
 	import NoImage from '$lib/assets/image-not-found.jpeg';
 	import FfGroupCard from './FFGroupCard.svelte';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import ArrowRight from '$lib/svgs/ArrowRight.svelte';
-	import ArrowLeft from '$lib/svgs/ArrowLeft.svelte';
+
+	import Fa from 'svelte-fa';
+	import { faCircleLeft, faCircleRight } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 
-	export let myGroups: GroupData[] = [];
+	export let groups: GroupData[] = [];
 	export let supabase: SupabaseClient;
 	let index = 0;
 	let itemsDisplayed = 1;
@@ -22,15 +23,15 @@
 	const updateItemsDisplayed = () => {
 		if (window?.innerWidth >= 1280) {
 			itemsDisplayed = 3;
-		} else if (window?.innerWidth >= 640) {
+		} else if (window?.innerWidth >= 1020) {
 			itemsDisplayed = 2;
 		} else {
-			itemsDisplayed = 1;
+			itemsDisplayed = groups.length;
 		}
 	};
 
 	const next = () => {
-		index = Math.min(index + 1, myGroups.length - itemsDisplayed);
+		index = Math.min(index + 1, groups.length - itemsDisplayed);
 	};
 
 	const previous = () => {
@@ -38,41 +39,26 @@
 	};
 </script>
 
-<div class=" lg:flex lg:flex-row gap-1 lg:gap-10">
+<div class="container lg:flex lg:flex-row gap-1 lg:gap-10">
 	<button
-		class="hidden lg:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
+		class="hidden lg:block btn my-auto variant-filled-ghost"
 		on:click={previous}
 		disabled={index === 0}
 	>
-		<ArrowLeft />
+		<Fa icon={faCircleLeft} size="2x" />
 	</button>
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-		{#each myGroups.slice(index, index + itemsDisplayed) as group (group.id)}
+	<div
+		class="flex flex-row overflow-x-auto lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-5 hide-scrollbar"
+	>
+		{#each groups.slice(index, index + itemsDisplayed) as group (group.id)}
 			<FfGroupCard {group} {supabase} />
 		{/each}
 	</div>
-	<div class="block lg:hidden">
-		<button
-			class="btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
-			on:click={previous}
-			disabled={index === 0}
-		>
-			<ArrowLeft />
-		</button>
-		<button
-			class="btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
-			on:click={next}
-			disabled={index >= myGroups.length - itemsDisplayed}
-		>
-			<ArrowRight />
-		</button>
-	</div>
-
 	<button
-		class=" hidden lg:block btn-icon btn-icon-sm h-10 w-10 my-auto variant-filled-error"
+		class="hidden lg:block btn my-auto variant-filled-ghost"
 		on:click={next}
-		disabled={index >= myGroups.length - itemsDisplayed}
+		disabled={index >= groups.length - itemsDisplayed}
 	>
-		<ArrowRight />
+		<Fa icon={faCircleRight} size="2x" />
 	</button>
 </div>

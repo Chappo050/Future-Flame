@@ -21,9 +21,9 @@
 	const iconDefinition = icon ? getIconByName(icon) : null;
 </script>
 
-<button type="button" on:click={clickAction} class="btn lg:max-h-10 max-h-6 variant-filled-primary">
+<button type="button" on:click={clickAction} class="btn variant-filled-primary">
 	{#if iconDefinition}
-		<Fa icon={iconDefinition} />
+		<Fa icon={iconDefinition} size="1.5x" />
 	{/if}
-	<span>{label}</span>
+	<span class="hidden md:block">{label}</span>
 </button>

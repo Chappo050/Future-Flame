@@ -75,11 +75,7 @@
 			icon={'faCirclePlus'}
 			label="Create"
 		/>
-		{#if myGroups.length}
-			<div class="flex justify-center space-x-10 m-16">
-				<FfCarousel {myGroups} {supabase} />
-			</div>
-		{/if}
+
 		<h3 class="h3">Find Groups</h3>
 		<div class="flex justify-center space-x-10">
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 m-5">

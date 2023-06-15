@@ -38,7 +38,7 @@
 </script>
 
 <a
-	class="card card-hover overflow-hidden max-w-lg"
+	class="card card-hover overflow-hidden max-w-lg min-w-[70%] ml-2"
 	href="/groups/{group.slug}"
 	in:fade={{ duration: 500 }}
 >

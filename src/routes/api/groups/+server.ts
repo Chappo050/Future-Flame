@@ -1,4 +1,5 @@
-import { json, error } from '@sveltejs/kit';
+import { handleError } from '$lib/helpers/APIHelpers.js';
+import { json } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ request, locals: { getSession, supabase } }) {
@@ -11,12 +12,7 @@ export async function GET({ request, locals: { getSession, supabase } }) {
 		.select()
 		.single();
 
-	if (insertGroupError) {
-		console.log('Error creating group', insertGroupError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating group' });
-	}
-	console.log('new Group', newGroup);
+	handleError(insertGroupError, 'Error inserting group');
 
 	//////Create Members//////////
 
@@ -30,11 +26,8 @@ export async function GET({ request, locals: { getSession, supabase } }) {
 		.from('members')
 		.insert(membersPayload);
 
-	if (insertMemberError) {
-		console.log('Error creating member row', insertMemberError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating member row' });
-	}
+	handleError(insertMemberError, 'Error inserting member');
+
 	console.log('New Member', newMember);
 
 	return json(newGroup);
