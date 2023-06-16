@@ -1,4 +1,5 @@
 // src/routes/profile/+page.ts
+import { handleError } from '$lib/helpers/APIHelpers';
 import type { PageLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 
@@ -22,12 +23,8 @@ export const load: PageLoad = async ({ parent }) => {
 
 	console.log('GOT', groupNoCount, memberCount);
 
-	if (memberCountError) {
-		console.error('Error retrieving data from view:', memberCountError);
-		return fail(500, {
-			supabaseErrorMessage: memberCountError.message
-		});
-	}
+	handleError(memberCountError, 'Error retrieving data from view');
+
 	const groups: GroupData[] = groupNoCount.map((group) => {
 		const count = memberCount.find((item) => item.group_id == group.id);
 		group.memberCount = count?.member_count | 0;

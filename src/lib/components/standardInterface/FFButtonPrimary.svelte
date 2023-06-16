@@ -3,13 +3,14 @@
 	export let label: string;
 	export let clickAction: () => void;
 	import Fa from 'svelte-fa';
-	import { faCirclePlus, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import { faCirclePlus, faPencil, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { faGithub } from '@fortawesome/free-brands-svg-icons';
-
 	const getIconByName = (name: string): IconDefinition | null => {
 		switch (name) {
 			case 'faCirclePlus':
 				return faCirclePlus;
+			case 'faPencil':
+				return faPencil;
 			case 'faGithub':
 				return faGithub;
 			// Add more cases for other icons

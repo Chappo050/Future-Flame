@@ -1,26 +1,26 @@
 // src/routes/profile/+page.ts
+import { handleError } from '$lib/helpers/APIHelpers';
 import type { PageLoad } from './$types';
-import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ parent, params }) => {
 	const { supabase, session } = await parent(); //Get session
 	const groupSlug = params.title;
 
-	const { data: groupData, error: groupError } = await supabase
+	const { data: groupDataReturned, error: groupError } = await supabase
 		.from('groups')
 		.select(`*`)
 		.eq('slug', groupSlug)
 		.single();
-
-	if (groupError) {
-		console.log('groupMemberProfileError', groupError);
-
-		return fail(500, {
-			supabaseErrorMessage: groupError.message
-		});
-	}
+	const groupData = groupDataReturned as GroupData;
+	handleError(groupError, 'Error fetching group data from slug');
 
 	console.log('groupData', groupData);
+
+	const { data: postData, error: postDataError } = await supabase.from('group_posts').select(`*`);
+
+	handleError(postDataError, 'Error fetching post data');
+
+	console.log('Post Data', postData);
 
 	const { data: memberData, error: memberError } = await supabase
 		.from('members')
@@ -28,14 +28,8 @@ export const load: PageLoad = async ({ parent, params }) => {
 		.eq('group_id', groupData.id);
 
 	console.log('Member Data', memberData);
+	handleError(memberError, 'Error fetching members of group');
 
-	if (memberError) {
-		console.log('groupMemberProfileError', memberError);
-
-		return fail(500, {
-			supabaseErrorMessage: memberError.message
-		});
-	}
 	///FETCH MEMBERS TO PROFILES
 	const userIds = memberData.reduce((acc, item) => {
 		acc.push(item.user_id);
@@ -49,13 +43,8 @@ export const load: PageLoad = async ({ parent, params }) => {
 
 	console.log('groupMemberProfileData', groupMemberProfileData);
 
-	if (groupMemberProfileError) {
-		console.log('groupMemberProfileError', groupMemberProfileError);
+	handleError(groupMemberProfileError, 'Error fetching members profiles');
 
-		return fail(500, {
-			supabaseErrorMessage: groupMemberProfileError.message
-		});
-	}
 	//Join data together
 	const memberList = memberData.map((member) => {
 		const profile = groupMemberProfileData.find((profile) => profile.id === member.user_id);
@@ -69,8 +58,11 @@ export const load: PageLoad = async ({ parent, params }) => {
 		}
 		return member;
 	});
-
+	postData?.sort((a, b) => {
+		return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+	});
 	groupData.members = memberList;
+	groupData.posts = postData;
 	console.log('return data from Group Members List', memberList);
 
 	return { session, groupData };

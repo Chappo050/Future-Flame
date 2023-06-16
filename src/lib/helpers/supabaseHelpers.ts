@@ -14,8 +14,11 @@ export const fetchImage = async (path: string, table: string, sb: SupabaseClient
 		if (error) {
 			throw error;
 		}
+		console.log('data image', data);
 
 		const url = URL.createObjectURL(data);
+		console.log('GOT URL', url);
+
 		return url;
 	} catch (error) {
 		if (error instanceof Error) {
@@ -57,13 +60,13 @@ export const uploadImage = async (files: FileList, table: string, sb: SupabaseCl
 /**
  * This function fetches a users profile.
  * @param user_id - The user to load from Supabase
- * @param sb - An instance of the Supabase client.
+ * @param supabase - An instance of the Supabase client.
  * @returns A promise that resolves to an object with an avtar URL and userData object.
  * @throws Will throw an error if the image download fails or userData fails to load.
  */
-export const fetchUserProfile = async (user_id: string, sb: SupabaseClient) => {
+export const fetchUserProfile = async (user_id: string, supabase: SupabaseClient) => {
 	try {
-		const { data, error: userError } = await sb
+		const { data, error: userError } = await supabase
 			.from('profiles')
 			.select('*')
 			.eq('id', user_id)
@@ -75,7 +78,7 @@ export const fetchUserProfile = async (user_id: string, sb: SupabaseClient) => {
 
 		const userData = data as ProfileData;
 
-		const avatarUrl = await fetchImage(userData.avatar_url, 'avatars', sb);
+		const avatarUrl = await fetchImage(userData.avatar_url, 'avatars', supabase);
 
 		return { avatarUrl, userData };
 	} catch (error) {

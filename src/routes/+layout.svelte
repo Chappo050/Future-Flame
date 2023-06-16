@@ -47,7 +47,7 @@
 	});
 
 	const drawSettings: DrawerSettings = {
-		width: 'w-[180px]'
+		width: 'w-full'
 	};
 	function drawerOpen(): void {
 		drawerStore.open(drawSettings);
@@ -59,7 +59,7 @@
 <Modal />
 <!-- App Shell -->
 <AppShell
-	regionPage="relative"
+	regionPage="relative hide-scrollbar"
 	slotPageHeader=" top-0 z-10"
 	slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64"
 >

@@ -3,6 +3,28 @@ import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
+export async function POST({ request, locals: { supabase, getSession } }) {
+	const incomingData = await request.json();
+	console.log('incoming Data', incomingData);
+	const session = await getSession();
+	const form: PostData = incomingData;
+	if (!session) throw error(401, { message: 'Unauthorized' });
+
+	//////Insert Post Group//////////
+
+	const { error: insertPostError, data: postData } = await supabase
+		.from('group_posts')
+		.insert(form)
+		.select('*')
+		.single();
+
+	console.log(postData);
+
+	handleError(insertPostError, 'Error inserting post row');
+	return json({ success: true, postData });
+}
+
+/** @type {import('./$types').RequestHandler} */
 export async function PUT({ request, locals: { supabase, getSession } }) {
 	const { groupSlug, action } = await request.json();
 

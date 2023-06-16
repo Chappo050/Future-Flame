@@ -3,6 +3,7 @@
 	import GroupInfo from '$lib/components/group/GroupInfo.svelte';
 	import Location from '$lib/components/group/Location.svelte';
 	import MemberList from '$lib/components/group/MemberList.svelte';
+	import PostBlock from '$lib/components/group/PostColumn.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';
 	import FfButtonRinged from '$lib/components/standardInterface/FFButtonRinged.svelte';
 	import FfProgessRadial from '$lib/components/standardInterface/FFProgessRadial.svelte';
@@ -23,6 +24,7 @@
 	let joinAction: string = 'signup';
 	let joinLoading: boolean;
 	let isAdmin: boolean = false;
+	let isMember: boolean = false;
 	const downloadImages = async (path: string) => {
 		loadingBanner = true;
 		bannerImage = (await fetchImage(path, 'banners', supabase)) as string;
@@ -46,10 +48,10 @@
 			console.log('Group admin check', session.user.id, groupData.members, isAdmin);
 
 			//Check user member status
-			const userExists = groupData?.members.some((item) => item.id === session?.user.id);
-			console.log('User Exists', userExists);
+			isMember = groupData?.members.some((item) => item.id === session?.user.id);
+			console.log('User Exists', isMember);
 
-			if (userExists) {
+			if (isMember) {
 				joinAction = 'leave';
 			} else {
 				joinAction = 'join';
@@ -109,27 +111,39 @@
 	<h2 class="h2 text-center my-5">{groupData?.title}</h2>
 
 	<GroupInfo {groupData} />
-	<div class=" hidden lg:flex justify-end">
-		{#if session && groupData?.members}
-			<MemberList {supabase} userList={groupData.members} />
-		{/if}
-	</div>
+	<div class="lg:grid lg:grid-cols-6">
+		<!-- Group Posts -->
+		<div />
+		<div class="justify-center my-10 col-span-3">
+			<PostBlock {supabase} {session} {isMember} groupId={groupData?.id} posts={groupData?.posts} />
+		</div>
 
-	<div class=" flex gap-10 mx-auto py-10">
-		{#if isAdmin}
-			<FfButtonPrimary
-				label="Edit Group"
-				clickAction={() => goto(`${window.location.pathname}/edit`)}
-			/>
-		{/if}
-		{#if session && !joinLoading && joinAction == 'join'}
-			<FfButtonPrimary label="Join" clickAction={() => joinButton(joinAction)} />
-		{:else if joinAction == 'leave' && !joinLoading}
-			<FfButtonRinged label="Leave" clickAction={() => joinButton(joinAction)} />
-		{:else if joinAction == 'signup' && !joinLoading}
-			<FfButtonPrimary label="Sign Up" clickAction={() => joinButton(joinAction)} />
-		{:else}
-			<FfProgessRadial size="w-8" />
-		{/if}
+		<div class=" flex-col">
+			{#if session && groupData?.members}
+				<MemberList {supabase} userList={groupData.members} />
+			{/if}
+			<div class=" flex gap-10 mx-auto py-10 justify-center">
+				{#if isAdmin}
+					<FfButtonPrimary
+						label="Edit Group"
+						icon="faPencil"
+						clickAction={() => goto(`${window.location.pathname}/edit`)}
+					/>
+				{/if}
+				{#if session && !joinLoading && joinAction == 'join'}
+					<FfButtonPrimary
+						label="Join"
+						icon="faCirclePlus"
+						clickAction={() => joinButton(joinAction)}
+					/>
+				{:else if joinAction == 'leave' && !joinLoading}
+					<FfButtonRinged label="Leave" clickAction={() => joinButton(joinAction)} />
+				{:else if joinAction == 'signup' && !joinLoading}
+					<FfButtonPrimary label="Sign Up" clickAction={() => joinButton(joinAction)} />
+				{:else}
+					<FfProgessRadial size="w-8" />
+				{/if}
+			</div>
+		</div>
 	</div>
 </div>

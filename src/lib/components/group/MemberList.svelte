@@ -12,10 +12,10 @@
 	{#if userList.length}
 		<dl class="list-nav w-max-lg max-h-40 overflow-auto">
 			<p class="text-center">Member List</p>
-			<hr />
+			<hr class="mx-24" />
 			<ul>
 				{#each userList as user}
-					<li>
+					<li class="mx-16 justify-stretch flex">
 						<a href="/profile/{user.id}">
 							{#await fetchImage(user.avatar_url, 'avatars', supabase)}
 								<FfProgessRadial size="w-12" />

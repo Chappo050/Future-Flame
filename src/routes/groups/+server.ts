@@ -1,4 +1,5 @@
 // src/routes/api/protected-route/+server.ts
+import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
@@ -21,13 +22,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		.select()
 		.eq('slug', cleanedTitle);
 
-	console.log(checkGroup);
-
-	if (checkGroupError) {
-		console.log('Error checking group name', checkGroupError);
-		// the user is not signed in
-		throw error(500, { message: 'Error checking group name' });
-	}
+	handleError(checkGroupError, 'Error checking group name');
 
 	//Return null for error
 	if (checkGroup.length) return json({ error: 'Group Name Already Exists.' });
@@ -38,11 +33,8 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		.select()
 		.single();
 
-	if (insertGroupError) {
-		console.log('Error creating group', insertGroupError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating group' });
-	}
+	handleError(insertGroupError, 'Error creating group');
+
 	console.log('new Group', newGroup);
 
 	//////Create Members//////////
@@ -57,11 +49,8 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		.from('members')
 		.insert(membersPayload);
 
-	if (insertMemberError) {
-		console.log('Error creating member row', insertMemberError);
-		// the user is not signed in
-		throw error(500, { message: 'Error creating member row' });
-	}
+	handleError(insertMemberError, 'Error creating member row');
+
 	console.log('New Member', newMember);
 
 	return json(newGroup);
