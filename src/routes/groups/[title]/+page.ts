@@ -11,23 +11,38 @@ export const load: PageLoad = async ({ parent, params }) => {
 		.select(`*`)
 		.eq('slug', groupSlug)
 		.single();
-	const groupData = groupDataReturned as GroupData;
-	handleError(groupError, 'Error fetching group data from slug');
 
-	console.log('groupData', groupData);
+	const groupData = groupDataReturned as GroupData;
+
+	handleError(groupError, 'Error fetching group data from slug');
 
 	const { data: postData, error: postDataError } = await supabase.from('group_posts').select(`*`);
 
 	handleError(postDataError, 'Error fetching post data');
+	const postIds = postData?.map((post) => post.id);
 
-	console.log('Post Data', postData);
+	const { data: postLikes, error: postLikesError } = await supabase
+		.from('post_like_count')
+		.select('*')
+		.in('post_id', postIds);
 
+	console.log('IDS', postLikes);
+
+	const postWithLikes = postData?.map((post) => {
+		const likeData = postLikes?.find((like) => like.post_id === post.id);
+		post.likes = likeData ? likeData.likes : 0;
+
+		return post;
+	});
+
+	console.log('with likes', postWithLikes);
+
+	handleError(postLikesError, 'Error fetching post likes');
 	const { data: memberData, error: memberError } = await supabase
 		.from('members')
 		.select(`*`)
 		.eq('group_id', groupData.id);
 
-	console.log('Member Data', memberData);
 	handleError(memberError, 'Error fetching members of group');
 
 	///FETCH MEMBERS TO PROFILES
@@ -59,10 +74,10 @@ export const load: PageLoad = async ({ parent, params }) => {
 		return member;
 	});
 	postData?.sort((a, b) => {
-		return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+		return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
 	});
 	groupData.members = memberList;
-	groupData.posts = postData;
+	groupData.posts = postWithLikes;
 	console.log('return data from Group Members List', memberList);
 
 	return { session, groupData };

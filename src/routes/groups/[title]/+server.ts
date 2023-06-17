@@ -47,11 +47,28 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 		await joinGroup(groupId, session, supabase);
 	} else if (action == 'leave') {
 		await leaveGroup(groupId, session, supabase);
+	} else if (action == 'like') {
+		await processLike(groupId, session, supabase);
 	}
 
 	return json({ success: true });
 }
+///////////////////Like Post///////////////
+async function processLike(groupId: string, session: any, supabase: any) {
+	const membersPayload = {
+		group_id: groupId,
+		user_id: session.user.id,
+		role: 'member'
+	};
 
+	const { error: insertMemberError, data: newMember } = await supabase
+		.from('members')
+		.insert(membersPayload);
+
+	handleError(insertMemberError, 'Error creating member row');
+
+	console.log('New Member', newMember);
+}
 ///////////////////Delete member record///////////////
 async function leaveGroup(groupId: string, session: any, supabase: any) {
 	const membersPayload = {

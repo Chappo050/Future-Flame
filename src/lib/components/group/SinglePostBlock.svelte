@@ -1,14 +1,43 @@
 <script lang="ts">
 	import type { SupabaseClient } from '@supabase/supabase-js';
 
-	import { fetchUserProfile } from '$lib/helpers/supabaseHelpers';
+	import { fetchUserProfile } from '$lib/helpers/frontend/supabaseHelpers';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import FfProgessRadial from '../standardInterface/FFProgessRadial.svelte';
 	import Fa from 'svelte-fa';
 	import { faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
+	import { APIRequest } from '$lib/helpers/APIHelpers';
+	import { invalidateAll } from '$app/navigation';
 	export let supabase: SupabaseClient;
 	export let session: any;
 	export let post: PostData;
+
+	const incrementLike = async (postId: string) => {
+		if (!session) return;
+		await APIRequest('/api/groups/group', 'POST', {
+			action: 'addLike',
+			groupId: post.group_id,
+			postId: postId
+		});
+		post.likes++;
+	};
+
+	const decrementLike = async (postId: string) => {
+		if (!session) return;
+		await APIRequest('/api/groups/group', 'DELETE', {
+			groupId: post.group_id,
+			postId: postId
+		});
+		post.likes--;
+	};
+
+	const checkLikedStatus = async (postId: string) => {
+		if (!session) return;
+		const response = await APIRequest(`/api/groups/group?postId=${postId}`, 'GET');
+
+		console.log('RES', response);
+		return response.success;
+	};
 </script>
 
 <div class="card card-hover overflow-hidden max-w-ful min-w-[70%] my-5">
@@ -20,7 +49,7 @@
 	</header>
 
 	<div class="p-4 space-y-4">
-		<div class="flex justify-between">
+		<div class="flex flex-col justify-between">
 			<h3 class="h3">{post.title}</h3>
 			<small>{new Date(post?.created_at).toLocaleString()}</small>
 		</div>
@@ -40,9 +69,19 @@
 				<p class="my-auto ml-2">{profile?.userData.username}</p>
 			{/await}
 		</div>
-		<small class="flex gap-2"
-			><Fa class="mx-auto my-auto" icon={faFireFlameSimple} size="1.5x" />
-			{post.likes}</small
-		>
+
+		{#await checkLikedStatus(post.id) then isLiked}
+			{#if isLiked}
+				<button class="flex gap-2 hover:scale-110" on:click={() => decrementLike(post?.id)}
+					><Fa class="mx-auto my-auto" color="red" icon={faFireFlameSimple} size="1.5x" />
+					{post.likes}</button
+				>
+			{:else}
+				<button class="flex gap-2 hover:scale-110" on:click={() => incrementLike(post?.id)}
+					><Fa class="mx-auto my-auto" icon={faFireFlameSimple} size="1.5x" />
+					{post.likes}</button
+				>
+			{/if}
+		{/await}
 	</footer>
 </div>

@@ -14,10 +14,8 @@ export const fetchImage = async (path: string, table: string, sb: SupabaseClient
 		if (error) {
 			throw error;
 		}
-		console.log('data image', data);
 
 		const url = URL.createObjectURL(data);
-		console.log('GOT URL', url);
 
 		return url;
 	} catch (error) {

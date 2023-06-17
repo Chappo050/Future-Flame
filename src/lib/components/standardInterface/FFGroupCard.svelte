@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchImage, fetchUserProfile } from '$lib/helpers/supabaseHelpers';
+	import { fetchImage, fetchUserProfile } from '$lib/helpers/frontend/supabaseHelpers';
 	import { Avatar } from '@skeletonlabs/skeleton';
 
 	import { fade, slide } from 'svelte/transition';

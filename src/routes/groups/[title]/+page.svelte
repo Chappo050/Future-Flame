@@ -8,9 +8,10 @@
 	import FfButtonRinged from '$lib/components/standardInterface/FFButtonRinged.svelte';
 	import FfProgessRadial from '$lib/components/standardInterface/FFProgessRadial.svelte';
 	import { APIRequest } from '$lib/helpers/APIHelpers.js';
-	import { fetchImage } from '$lib/helpers/supabaseHelpers.js';
+	import { fetchImage } from '$lib/helpers/frontend/supabaseHelpers.js';
 	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import { onMount } from 'svelte';
 
 	//Loaded data
 	export let data;
@@ -108,6 +109,7 @@
 	<img src={bannerImage} class="bg-black/50 w-full h-32" alt="Post" />
 </header>
 <div class="container mx-auto flex flex-col justify-center">
+	<button class="button">TEST</button>
 	<h2 class="h2 text-center my-5">{groupData?.title}</h2>
 
 	<GroupInfo {groupData} />

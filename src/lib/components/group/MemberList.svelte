@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchImage } from '$lib/helpers/supabaseHelpers';
+	import { fetchImage } from '$lib/helpers/frontend/supabaseHelpers';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import FfProgessRadial from '../standardInterface/FFProgessRadial.svelte';

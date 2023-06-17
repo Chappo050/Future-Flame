@@ -5,7 +5,7 @@
 	import { FileButton } from '@skeletonlabs/skeleton';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import MyProgessRadial from '../standardInterface/FFProgessRadial.svelte';
-	import { fetchImage, uploadImage } from '$lib/helpers/supabaseHelpers';
+	import { fetchImage, uploadImage } from '$lib/helpers/frontend/supabaseHelpers';
 
 	export let url: string;
 	export let supabase: SupabaseClient;

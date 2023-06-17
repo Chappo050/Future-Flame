@@ -2,7 +2,7 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import FfButtonPrimary from '../standardInterface/FFButtonPrimary.svelte';
 	import PostForm from './PostForm.svelte';
-	import { fetchImage, fetchUserProfile } from '$lib/helpers/supabaseHelpers';
+	import { fetchImage, fetchUserProfile } from '$lib/helpers/frontend/supabaseHelpers';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import FfProgessRadial from '../standardInterface/FFProgessRadial.svelte';
 	import SinglePost from './SinglePostBlock.svelte';
