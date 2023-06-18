@@ -7,6 +7,8 @@
 
 	import Fa from 'svelte-fa';
 	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
+	import FfProgessRadial from './FFProgessRadial.svelte';
+	import GroupCardPlaceholder from '../placeholders/GenericPlaceholder.svelte';
 
 	export let group: GroupData;
 	export let supabase: SupabaseClient;
@@ -41,7 +43,9 @@
 	in:fade={{ duration: 500 }}
 >
 	<header>
-		{#await downloadImage(group.bannerImage) then src}
+		{#await downloadImage(group.bannerImage)}
+			<FfProgessRadial />
+		{:then src}
 			<img {src} class="bg-black/50 w-full h-32" alt="Post" />
 		{/await}
 	</header>
@@ -59,7 +63,8 @@
 		<div class="flex-auto flex justify-between items-center">
 			<h6 class="font-bold">{username}</h6>
 			<small class="flex gap-2"
-				><Fa class="mx-auto my-auto" icon={faPeopleGroup} size="1.5x" /> {group.memberCount}</small
+				><Fa class="mx-auto my-auto" icon={faPeopleGroup} size="1.5x" />
+				{group.memberCount}</small
 			>
 		</div>
 	</footer>

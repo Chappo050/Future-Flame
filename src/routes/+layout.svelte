@@ -24,6 +24,7 @@
 	//Components
 	import SideNav from '$lib/components/global/SideNav.svelte';
 	import Hamburger from '$lib/svgs/Hamburger.svelte';
+	import { navigating } from '$app/stores';
 
 	//Other
 	import logo from '$lib/assets/future-flame-logo-zip-linear/svg/logo-no-background.svg';
@@ -31,6 +32,7 @@
 	//SuperBase Auth Setup
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import GroupCardPlaceholder from '$lib/components/placeholders/GenericPlaceholder.svelte';
 
 	export let data;
 
@@ -99,6 +101,11 @@
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft"><SideNav {session} /></svelte:fragment>
 	<!-- Page Route Content -->
-	<slot />
+	{#if $navigating}
+		<GroupCardPlaceholder />
+	{:else}
+		<slot />
+	{/if}
+
 	<svelte:fragment slot="pageFooter">Page Footer</svelte:fragment>
 </AppShell>
