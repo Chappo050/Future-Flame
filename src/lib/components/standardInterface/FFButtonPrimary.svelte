@@ -24,7 +24,7 @@
 
 <button type="button" on:click={clickAction} class="btn variant-filled-primary">
 	{#if iconDefinition}
-		<Fa icon={iconDefinition} size="1.5x" />
+		<Fa icon={iconDefinition} size="1.0x" />
 	{/if}
 	<span class="hidden md:block">{label}</span>
 </button>

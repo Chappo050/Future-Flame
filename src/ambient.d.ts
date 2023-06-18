@@ -1,5 +1,5 @@
 interface GroupData {
-	id: number;
+	id: string;
 	title: string;
 	mission: string;
 	bannerImage: string;
