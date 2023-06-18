@@ -50,14 +50,14 @@
 					if (r.success) {
 						toastStore.trigger({
 							message: 'Group Created Successfully',
-							background: 'variant-ghost-success'
+							background: 'variant-filled-success'
 						});
 						// createLoading = false;
 						goto(`/groups/${r.response.slug}`);
 					} else {
 						toastStore.trigger({
 							message: 'Group Creation Failed, Please Try Again',
-							background: 'variant-ghost-error'
+							background: 'variant-filled-error'
 						});
 						// createLoading = false;
 					}
@@ -66,7 +66,7 @@
 				}
 				toastStore.trigger({
 					message: 'Creation cancelled.',
-					background: 'variant-ghost-error'
+					background: 'variant-filled-error'
 				});
 			}
 		};

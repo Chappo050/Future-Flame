@@ -9,7 +9,7 @@
 	import FfProgessRadial from '$lib/components/standardInterface/FFProgessRadial.svelte';
 	import { APIRequest } from '$lib/helpers/APIHelpers.js';
 	import { fetchImage } from '$lib/helpers/frontend/supabaseHelpers.js';
-	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
+	import { toastStore } from '@skeletonlabs/skeleton';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { onMount } from 'svelte';
 
@@ -51,8 +51,9 @@
 			//Check user member status
 			isMember = groupData?.members.some((item) => item.id === session?.user.id);
 			console.log('User Exists', isMember);
-
-			if (isMember) {
+			if (isAdmin) {
+				joinAction = 'leaveAdmin';
+			} else if (isMember) {
 				joinAction = 'leave';
 			} else {
 				joinAction = 'join';
@@ -73,8 +74,6 @@
 					action: 'join'
 				});
 				if (responseJoin.success) {
-					console.log('invalidate');
-
 					await invalidate(() => true);
 				}
 
@@ -87,15 +86,34 @@
 					action: 'leave'
 				});
 				if (responseLeave.success) {
-					console.log('invalidate');
-
 					await invalidate(() => true);
 				}
 
 				break;
 
+			case 'leaveAdmin':
+				console.log('leaveAdmin');
+				const responseLeaveAdmin = await APIRequest(window.location.pathname, 'PUT', {
+					groupSlug: groupSlug,
+					action: 'leaveAdmin'
+				});
+				if (responseLeaveAdmin.success) {
+					toastStore.trigger({
+						message: 'Group Left',
+						background: 'variant-filled-success'
+					});
+					await invalidate(() => true);
+				} else {
+					toastStore.trigger({
+						message: "Can't leave group as the last admin",
+						background: 'variant-filled-error'
+					});
+					joinLoading = false;
+				}
+
+				break;
+
 			case 'signup':
-				console.log('Sign Up');
 				goto('/signup');
 				break;
 
@@ -109,9 +127,39 @@
 	<img src={bannerImage} class="bg-black/50 w-full h-32" alt="Post" />
 </header>
 <div class="container mx-auto flex flex-col justify-center">
-	<button class="button">TEST</button>
 	<h2 class="h2 text-center my-5">{groupData?.title}</h2>
-
+	<div class=" flex flex-row gap-10 mx-auto justify-center">
+		{#if isAdmin}
+			<FfButtonPrimary
+				label="Edit Group"
+				icon="faPencil"
+				clickAction={() => goto(`${window.location.pathname}/edit`)}
+			/>
+		{/if}
+		{#if session && !joinLoading && joinAction == 'join'}
+			<FfButtonPrimary
+				label="Join"
+				icon="faCirclePlus"
+				clickAction={() => joinButton(joinAction)}
+			/>
+		{:else if joinAction == 'leave' && !joinLoading && !isAdmin}
+			<FfButtonRinged
+				label="Leave"
+				icon="faRightFromBraket"
+				clickAction={() => joinButton(joinAction)}
+			/>
+		{:else if !joinLoading && isAdmin && joinAction == 'leaveAdmin'}
+			<FfButtonRinged
+				label="Leave"
+				icon="faRightFromBraket"
+				clickAction={() => joinButton(joinAction)}
+			/>
+		{:else if joinAction == 'signup' && !joinLoading}
+			<FfButtonPrimary label="Sign Up" clickAction={() => joinButton(joinAction)} />
+		{:else}
+			<FfProgessRadial size="w-8" />
+		{/if}
+	</div>
 	<GroupInfo {groupData} />
 	<div class="lg:grid lg:grid-cols-6">
 		<!-- Group Posts -->
@@ -124,28 +172,6 @@
 			{#if session && groupData?.members}
 				<MemberList {supabase} userList={groupData.members} />
 			{/if}
-			<div class=" flex gap-10 mx-auto py-10 justify-center">
-				{#if isAdmin}
-					<FfButtonPrimary
-						label="Edit Group"
-						icon="faPencil"
-						clickAction={() => goto(`${window.location.pathname}/edit`)}
-					/>
-				{/if}
-				{#if session && !joinLoading && joinAction == 'join'}
-					<FfButtonPrimary
-						label="Join"
-						icon="faCirclePlus"
-						clickAction={() => joinButton(joinAction)}
-					/>
-				{:else if joinAction == 'leave' && !joinLoading}
-					<FfButtonRinged label="Leave" clickAction={() => joinButton(joinAction)} />
-				{:else if joinAction == 'signup' && !joinLoading}
-					<FfButtonPrimary label="Sign Up" clickAction={() => joinButton(joinAction)} />
-				{:else}
-					<FfProgessRadial size="w-8" />
-				{/if}
-			</div>
 		</div>
 	</div>
 </div>

@@ -5,7 +5,7 @@
 	import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { APIRequest } from '$lib/helpers/APIHelpers';
-	import { toastStore, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
+	import { toastStore } from '@skeletonlabs/skeleton';
 	import { invalidateAll } from '$app/navigation';
 	import FfProgessRadial from '../standardInterface/FFProgessRadial.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -41,7 +41,7 @@
 		if (response.success) {
 			toastStore.trigger({
 				message: 'Post Created Successfully',
-				background: 'variant-ghost-success'
+				background: 'variant-filled-success'
 			});
 			await invalidateAll();
 			resetForm();
@@ -49,7 +49,7 @@
 		} else {
 			toastStore.trigger({
 				message: 'Post Failed, Please Try Again',
-				background: 'variant-ghost-error'
+				background: 'variant-filled-error'
 			});
 		}
 		loading = false;
