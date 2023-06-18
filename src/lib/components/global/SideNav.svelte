@@ -12,11 +12,23 @@
 
 <nav class="list-nav p-4 flex flex-col justify-center items-left">
 	<ul>
-		<li>
-			<a href="/" class={classesActive('/')} data-sveltekit-preload-data on:click={drawerClose}
-				>Home</a
-			>
-		</li>
+		{#if session}
+			<li>
+				<a href="/" class={classesActive('/')} data-sveltekit-preload-data on:click={drawerClose}
+					>Home</a
+				>
+			</li>
+		{:else}
+			<li>
+				<a
+					href="/landing"
+					class={classesActive('/')}
+					data-sveltekit-preload-data
+					on:click={drawerClose}>Home</a
+				>
+			</li>
+		{/if}
+
 		<li>
 			<a
 				href="/groups"

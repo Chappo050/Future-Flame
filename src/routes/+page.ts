@@ -5,15 +5,17 @@ import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ parent }) => {
 	const { supabase, session } = await parent(); //Get session
-	console.log('loading data');
+
+	if (!session) return { message: 'No user, load landing page' };
 
 	const { data: visisbleGroups, error: visisbleGroupsError } = await supabase
 		.from('user_group_ids')
 		.select('*')
 		.single();
+
 	handleError(visisbleGroupsError, 'Selecting all groups error');
 
-	if (!visisbleGroups?.group_ids.length)
+	if (!visisbleGroups?.group_ids?.length)
 		handleError(visisbleGroups, 'Selecting all groups data error');
 
 	const { data: groupData, error: groupDataError } = await supabase

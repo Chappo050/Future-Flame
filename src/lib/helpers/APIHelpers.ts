@@ -28,9 +28,9 @@ export const APIRequest = async (path: string, method: string, body?: any) => {
 	return responseData;
 };
 
-export const handleError = (err: any, message: string) => {
+export const handleError = (err: any, message: string, status = 500) => {
 	if (err) {
 		console.log(`ERROR ${message}`, err);
-		throw error(500, { message: message });
+		throw error(status, { message: message });
 	}
 };
