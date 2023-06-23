@@ -14,8 +14,7 @@
 
 	const incrementLike = async (postId: string) => {
 		if (!session) return;
-		await APIRequest('/api/groups/group', 'POST', {
-			action: 'addLike',
+		await APIRequest('/api/protected/group/like', 'POST', {
 			groupId: post.group_id,
 			postId: postId
 		});
@@ -24,7 +23,7 @@
 
 	const decrementLike = async (postId: string) => {
 		if (!session) return;
-		await APIRequest('/api/groups/group', 'DELETE', {
+		await APIRequest('/api/protected/group/like', 'DELETE', {
 			groupId: post.group_id,
 			postId: postId
 		});
@@ -33,7 +32,7 @@
 
 	const checkLikedStatus = async (postId: string) => {
 		if (!session) return;
-		const response = await APIRequest(`/api/groups/group?postId=${postId}`, 'GET');
+		const response = await APIRequest(`/api/protected/group/like?postId=${postId}`, 'GET');
 
 		console.log('RES', response);
 		return response.success;

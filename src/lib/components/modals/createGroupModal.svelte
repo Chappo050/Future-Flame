@@ -29,7 +29,7 @@
 		loading = true;
 		console.log('Modal', $modalStore[0]);
 
-		const response = await APIRequest('/groups', 'POST', formData);
+		const response = await APIRequest('/api/protected/group/create', 'POST', formData);
 		loading = false;
 
 		if ($modalStore[0].response && response.id) {

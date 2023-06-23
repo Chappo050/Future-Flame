@@ -1,9 +1,9 @@
-// src/routes/api/protected-route/+server.ts
 import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
+import supabaseServer from '$lib/helpers/backend/supabase.js';
+import type { RequestHandler } from './$types';
 
-/** @type {import('./$types').RequestHandler} */
-export async function POST({ request, locals: { supabase, getSession } }) {
+export const POST: RequestHandler = async ({ request, locals: { getSession } }) => {
 	const incomingData = await request.json();
 
 	const session = await getSession();
@@ -17,7 +17,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 
 	//Check if group name already exists
 
-	const { error: checkGroupError, data: checkGroup } = await supabase
+	const { error: checkGroupError, data: checkGroup } = await supabaseServer
 		.from('groups')
 		.select()
 		.eq('slug', cleanedTitle);
@@ -26,8 +26,11 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 
 	//Return null for error
 	if (checkGroup.length) return json({ error: 'Group Name Already Exists.' });
+	//Add user
+	incomingData.user_id = session.user.id;
+	console.log(incomingData);
 
-	const { error: insertGroupError, data: newGroup } = await supabase
+	const { error: insertGroupError, data: newGroup } = await supabaseServer
 		.from('groups')
 		.insert(incomingData)
 		.select()
@@ -45,7 +48,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		role: 'admin'
 	};
 
-	const { error: insertMemberError, data: newMember } = await supabase
+	const { error: insertMemberError, data: newMember } = await supabaseServer
 		.from('members')
 		.insert(membersPayload);
 
@@ -54,9 +57,4 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	console.log('New Member', newMember);
 
 	return json(newGroup);
-}
-
-// export const POST: RequestHandler = async ({ request, url,  }) => {
-// 	console.log('REQUEST', request);
-
-// };
+};

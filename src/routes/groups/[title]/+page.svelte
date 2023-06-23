@@ -69,9 +69,8 @@
 		switch (action) {
 			case 'join':
 				console.log('join');
-				const responseJoin = await APIRequest(window.location.pathname, 'PUT', {
-					groupSlug: groupSlug,
-					action: 'join'
+				const responseJoin = await APIRequest('/api/protected/group/join', 'POST', {
+					groupSlug: groupSlug
 				});
 				if (responseJoin.success) {
 					await invalidate(() => true);

@@ -16,7 +16,10 @@ export const load: PageLoad = async ({ parent, params }) => {
 
 	handleError(groupError, 'Error fetching group data from slug');
 
-	const { data: postData, error: postDataError } = await supabase.from('group_posts').select(`*`);
+	const { data: postData, error: postDataError } = await supabase
+		.from('group_posts')
+		.select(`*`)
+		.eq('group_id', groupData.id);
 
 	handleError(postDataError, 'Error fetching post data');
 	const postIds = postData?.map((post) => post.id);

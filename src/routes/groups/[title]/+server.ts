@@ -42,36 +42,17 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 	const groupId = groupFromSlug?.id;
 
 	handleError(selectGroupError, 'Error selecting group row');
+
 	let success;
-	if (action == 'join') {
-		success = await joinGroup(groupId, session, supabase);
-	} else if (action == 'leave') {
+	if (action == 'leave') {
 		success = await leaveGroup(groupId, session, supabase);
 	} else if (action == 'leaveAdmin') {
 		success = await leaveGroupAdmin(groupId, session, supabase);
-	} else if (action == 'like') {
-		success = await processLike(groupId, session, supabase);
 	}
 
 	return json({ success: success });
 }
-///////////////////Like Post///////////////
-async function processLike(groupId: string, session: any, supabase: any) {
-	const membersPayload = {
-		group_id: groupId,
-		user_id: session.user.id,
-		role: 'member'
-	};
 
-	const { error: insertMemberError, data: newMember } = await supabase
-		.from('members')
-		.insert(membersPayload);
-
-	handleError(insertMemberError, 'Error creating member row');
-
-	console.log('New Member', newMember);
-	return true;
-}
 ///////////////////Delete member record///////////////
 async function leaveGroup(groupId: string, session: any, supabase: any) {
 	const { error: selectMemberError, data: selectedMember } = await supabase
@@ -132,23 +113,5 @@ async function leaveGroupAdmin(groupId: string, session: any, supabase: any) {
 	handleError(deleteError, 'Error deleting member row');
 
 	console.log('Delete data', deleteData);
-	return true;
-}
-
-///////////////////Create member record///////////////
-async function joinGroup(groupId: string, session: any, supabase: any) {
-	const membersPayload = {
-		group_id: groupId,
-		user_id: session.user.id,
-		role: 'member'
-	};
-
-	const { error: insertMemberError, data: newMember } = await supabase
-		.from('members')
-		.insert(membersPayload);
-
-	handleError(insertMemberError, 'Error creating member row');
-
-	console.log('New Member', newMember);
 	return true;
 }
