@@ -43,6 +43,8 @@
 			joinAction = 'signup';
 		} else {
 			//Check admin
+			console.log('GROUPDATA', groupData);
+
 			isAdmin = groupData?.members.find(
 				(user) => user.role === 'admin' && user.id === session.user.id
 			);
@@ -138,7 +140,7 @@
 			<FfProgessRadial size="w-8" />
 		{/if}
 	</div>
-	<GroupInfo {groupData} />
+	<GroupInfo {groupData} {isAdmin} />
 	<div class="lg:grid lg:grid-cols-6">
 		<!-- Group Posts -->
 		<div />

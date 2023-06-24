@@ -24,6 +24,12 @@ interface MembersData {
 	user_id: string;
 }
 
+interface MarkerData {
+	address: string;
+	marker: object;
+	pinNumber: number;
+}
+
 interface PostData {
 	id?: number;
 	created_at?: Date;

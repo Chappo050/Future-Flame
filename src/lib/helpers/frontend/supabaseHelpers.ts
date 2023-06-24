@@ -10,6 +10,15 @@ import type { SupabaseClient } from '@supabase/supabase-js';
  */
 export const fetchImage = async (path: string, table: string, sb: SupabaseClient) => {
 	try {
+		//With pro plan can do this
+		// const { data, error } = await sb.storage.from(table).download(path, {
+		// 	transform: {
+		// 		width: 100,
+		// 		height: 300,
+		// 		resize: 'contain' // 'contain' | 'cover' | 'fill'
+		// 	}
+		// });
+
 		const { data, error } = await sb.storage.from(table).download(path);
 		if (error) {
 			throw error;

@@ -43,7 +43,7 @@
 
 	{#each posts as post}
 		<div class="flex flex-col gap-10">
-			<SinglePost {supabase} {session} {post} />
+			<SinglePost {supabase} {session} {post} {isMember} />
 		</div>
 	{/each}
 </div>
