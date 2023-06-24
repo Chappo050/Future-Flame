@@ -1,10 +1,12 @@
 import { handleError } from '$lib/helpers/APIHelpers.js';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ request, locals: { getSession, supabase } }) {
 	const incomingData = await request.json();
 	const session = await getSession();
+
+	if (!session) throw error(401, { message: 'Unauthorized' });
 	//////Create Group//////////
 	const { error: insertGroupError, data: newGroup } = await supabase
 		.from('groups')
@@ -17,7 +19,7 @@ export async function GET({ request, locals: { getSession, supabase } }) {
 	//////Create Members//////////
 
 	const membersPayload = {
-		group_id: newGroup.id,
+		group_id: newGroup?.id,
 		user_id: session.user.id,
 		role: 'admin'
 	};

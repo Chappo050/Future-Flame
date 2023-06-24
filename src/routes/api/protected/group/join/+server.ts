@@ -2,9 +2,9 @@
 import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
 import supabaseServer from '$lib/helpers/backend/supabase.js';
+import type { RequestHandler } from './$types';
 
-/** @type {import('./$types').RequestHandler} */
-export async function POST({ request, locals: { getSession } }) {
+export const POST: RequestHandler = async ({ request, locals: { getSession } }) => {
 	const { groupSlug } = await request.json();
 
 	const session = await getSession();
@@ -25,7 +25,7 @@ export async function POST({ request, locals: { getSession } }) {
 	const success = await joinGroup(groupId, session, supabaseServer);
 
 	return json({ success: success });
-}
+};
 
 ///////////////////Create member record///////////////
 async function joinGroup(groupId: string, session: any, supabaseServer: any) {

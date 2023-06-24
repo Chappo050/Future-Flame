@@ -10,16 +10,15 @@ export const Permissions = {
 			.from('members')
 			.select('*')
 			.eq('user_id', user_id)
-			.eq('group_id', group_id)
-			.single();
+			.eq('group_id', group_id);
 
 		handleError(userError, 'Error checking group members');
-		if (userData) {
+		if (userData?.length) {
 			console.log('Is group member', userData);
 
 			return true;
 		} else {
-			return json({ success: false });
+			return false;
 		}
 	},
 
@@ -31,16 +30,15 @@ export const Permissions = {
 			.select('*')
 			.eq('user_id', user_id)
 			.eq('role', 'admin')
-			.eq('group_id', group_id)
-			.single();
+			.eq('group_id', group_id);
 
-		handleError(userError, 'Error checking group members');
-		if (userData) {
-			console.log('Is group member', userData);
+		handleError(userError, 'Error checking group admins');
+		if (userData?.length) {
+			console.log('Is group Admin', userData);
 
 			return true;
 		} else {
-			return json({ success: false });
+			return false;
 		}
 	}
 };

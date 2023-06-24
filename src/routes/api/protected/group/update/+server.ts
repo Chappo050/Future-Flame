@@ -1,9 +1,10 @@
-// src/routes/api/protected-route/+server.ts
+import type { RequestHandler } from './$types';
 import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
+import supabaseServer from '$lib/helpers/backend/supabase.js';
+import { Permissions } from '$lib/helpers/backend/permissions';
 
-/** @type {import('./$types').RequestHandler} */
-export async function PUT({ request, locals: { supabase, getSession } }) {
+export const PUT: RequestHandler = async ({ request, locals: { getSession } }) => {
 	const incomingData = await request.json();
 	console.log(incomingData, 'FORM');
 	const form = incomingData;
@@ -11,7 +12,11 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 	const session = await getSession();
 
 	if (!session) throw error(401, { message: 'Unauthorized' });
-	const { error: updateGroupError, data: updatedGroup } = await supabase
+
+	const isAdmin = await Permissions.isGroupAdmin(session, supabaseServer, form.id);
+	if (!isAdmin) throw error(401, { message: 'Unauthorized' });
+
+	const { error: updateGroupError, data: updatedGroup } = await supabaseServer
 		.from('groups')
 		.update({ mission: form.mission })
 		.eq('id', form.id);
@@ -21,9 +26,4 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 	console.log('new Group', updatedGroup);
 
 	return json({ success: true });
-}
-
-// export const POST: RequestHandler = async ({ request, url,  }) => {
-// 	console.log('REQUEST', request);
-
-// };
+};

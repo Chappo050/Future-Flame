@@ -10,7 +10,8 @@ export const POST: RequestHandler = async ({ request, locals: { getSession } }) 
 	const session = await getSession();
 
 	if (!session) throw error(401, { message: 'Unauthorized' });
-	await Permissions.isGroupMember(session, supabaseServer, groupId);
+	const isMember = await Permissions.isGroupMember(session, supabaseServer, groupId);
+	if (!isMember) throw error(401, { message: 'Unauthorized' });
 
 	const { data: likeData, error: likeError } = await supabaseServer
 		.from('post_likes')

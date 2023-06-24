@@ -1,31 +1,10 @@
-// src/routes/api/protected-route/+server.ts
+import type { RequestHandler } from './$types';
 import { handleError } from '$lib/helpers/APIHelpers.js';
 import { json, error } from '@sveltejs/kit';
+import supabaseServer from '$lib/helpers/backend/supabase.js';
+import { Permissions } from '$lib/helpers/backend/permissions';
 
-/** @type {import('./$types').RequestHandler} */
-export async function POST({ request, locals: { supabase, getSession } }) {
-	const incomingData = await request.json();
-	console.log('incoming Data', incomingData);
-	const session = await getSession();
-	const form: PostData = incomingData;
-	if (!session) throw error(401, { message: 'Unauthorized' });
-
-	//////Insert Post Group//////////
-
-	const { error: insertPostError, data: postData } = await supabase
-		.from('group_posts')
-		.insert(form)
-		.select('*')
-		.single();
-
-	console.log(postData);
-
-	handleError(insertPostError, 'Error inserting post row');
-	return json({ success: true, postData });
-}
-
-/** @type {import('./$types').RequestHandler} */
-export async function PUT({ request, locals: { supabase, getSession } }) {
+export const PUT: RequestHandler = async ({ request, locals: { getSession } }) => {
 	const { groupSlug, action } = await request.json();
 
 	const session = await getSession();
@@ -33,7 +12,7 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 	if (!session) throw error(401, { message: 'Unauthorized' });
 
 	//Slug to uuid
-	const { error: selectGroupError, data: groupFromSlug } = await supabase
+	const { error: selectGroupError, data: groupFromSlug } = await supabaseServer
 		.from('groups')
 		.select('id')
 		.eq('slug', groupSlug)
@@ -42,16 +21,20 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
 	const groupId = groupFromSlug?.id;
 
 	handleError(selectGroupError, 'Error selecting group row');
+	const isAdmin = await Permissions.isGroupAdmin(session, supabaseServer, groupId);
+	const isMember = await Permissions.isGroupMember(session, supabaseServer, groupId);
+
+	if (!isMember && !isAdmin) throw error(401, { message: 'Unauthorized' });
 
 	let success;
-	if (action == 'leave') {
-		success = await leaveGroup(groupId, session, supabase);
-	} else if (action == 'leaveAdmin') {
-		success = await leaveGroupAdmin(groupId, session, supabase);
+	if (isAdmin) {
+		success = await leaveGroupAdmin(groupId, session, supabaseServer);
+	} else if (isMember) {
+		success = await leaveGroup(groupId, session, supabaseServer);
 	}
 
 	return json({ success: success });
-}
+};
 
 ///////////////////Delete member record///////////////
 async function leaveGroup(groupId: string, session: any, supabase: any) {

@@ -51,9 +51,7 @@
 			//Check user member status
 			isMember = groupData?.members.some((item) => item.id === session?.user.id);
 			console.log('User Exists', isMember);
-			if (isAdmin) {
-				joinAction = 'leaveAdmin';
-			} else if (isMember) {
+			if (isAdmin || isMember) {
 				joinAction = 'leave';
 			} else {
 				joinAction = 'join';
@@ -80,23 +78,10 @@
 
 			case 'leave':
 				console.log('leave');
-				const responseLeave = await APIRequest(window.location.pathname, 'PUT', {
-					groupSlug: groupSlug,
-					action: 'leave'
+				const responseLeave = await APIRequest('/api/protected/group/leave', 'PUT', {
+					groupSlug: groupSlug
 				});
 				if (responseLeave.success) {
-					await invalidate(() => true);
-				}
-
-				break;
-
-			case 'leaveAdmin':
-				console.log('leaveAdmin');
-				const responseLeaveAdmin = await APIRequest(window.location.pathname, 'PUT', {
-					groupSlug: groupSlug,
-					action: 'leaveAdmin'
-				});
-				if (responseLeaveAdmin.success) {
 					toastStore.trigger({
 						message: 'Group Left',
 						background: 'variant-filled-success'
@@ -141,13 +126,7 @@
 				icon="faCirclePlus"
 				clickAction={() => joinButton(joinAction)}
 			/>
-		{:else if joinAction == 'leave' && !joinLoading && !isAdmin}
-			<FfButtonRinged
-				label="Leave"
-				icon="faRightFromBraket"
-				clickAction={() => joinButton(joinAction)}
-			/>
-		{:else if !joinLoading && isAdmin && joinAction == 'leaveAdmin'}
+		{:else if joinAction == 'leave' && !joinLoading}
 			<FfButtonRinged
 				label="Leave"
 				icon="faRightFromBraket"

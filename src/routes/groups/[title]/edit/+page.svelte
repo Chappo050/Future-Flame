@@ -25,7 +25,7 @@
 
 	const submitForm = async () => {
 		try {
-			const response = await APIRequest(window.location.pathname, 'PUT', form);
+			const response = await APIRequest('/api/protected/group/update', 'PUT', form);
 			console.log(response);
 			if (response.success) {
 				toastStore.trigger({
