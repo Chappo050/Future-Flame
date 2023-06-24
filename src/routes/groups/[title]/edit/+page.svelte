@@ -3,9 +3,13 @@
 	import { APIRequest } from '$lib/helpers/APIHelpers';
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
+	import LocationList from '$lib/components/group/groupInfo/LocationList.svelte';
+	import GoogleMaps from '$lib/components/maps/googleMaps.svelte';
+	import LocationAndMap from '$lib/components/group/groupInfo/LocationAndMap.svelte';
+	import ComponentForm from '$lib/components/forms/ComponentForm.svelte';
 
 	export let data: PageData;
-	let { supabase, session, groupData } = data;
+	let { supabase, session, groupData, isAdmin } = data;
 	//Loading for each element
 	let loadingMission: boolean = false;
 

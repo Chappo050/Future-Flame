@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	//import mapStyles from './map-styles'; // optional
-
+	export let locations: any = [];
 	export let globally = true;
 	export let map;
 	export let isAdmin = false;
@@ -23,31 +23,31 @@
 
 	// Counter for the number of pins
 	let pinCounter = 0;
-	const getCurrentLocation = () => {
+	const getCurrentLocation = async () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
-				(position) => {
+				async (position) => {
 					center = {
 						lat: position.coords.latitude,
 						lng: position.coords.longitude
 					};
 					// Initialize map after getting location
-					initMap();
+					await initMap();
 				},
-				(error) => {
+				async (error) => {
 					zoom = 3;
 					// If user denies location or error occurs, initialize map with default center
 					console.error('Error occurred getting location: ', error);
-					initMap();
+					await initMap();
 				}
 			);
 		} else {
 			// Browser doesn't support Geolocation, initialize map with default center
-			initMap();
+			await initMap();
 		}
 	};
 
-	const initMap = () => {
+	const initMap = async () => {
 		map = new google.maps.Map(container, {
 			zoom,
 			center
@@ -71,7 +71,12 @@
 							let address = results[0].formatted_address;
 
 							// Store the marker, address and pinCounter in the markers array
-							markers.push({ marker: marker, address: address, pinNumber: markers.length + 1 });
+							markers.push({
+								marker: marker, // Make sure to store the marker object itself
+								location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+								address: address,
+								pinNumber: markers.length + 1
+							});
 
 							dispatch('markers', markers);
 							console.log(`Address: ${address}`);
@@ -103,20 +108,57 @@
 		if (globally) {
 			Object.assign(window, { map });
 		}
+
+		await placeMarkers();
 	};
 
-	onMount(() => {
+	function placeMarkers() {
+		locations.forEach((location) => {
+			console.log(location.location);
+
+			let marker = new google.maps.Marker({
+				position: location.location,
+				map: map,
+				label: `${markers.length + 1}`
+			});
+
+			// Add a click listener to the marker
+			marker.addListener('click', () => {
+				marker.setMap(null); // remove the marker
+
+				// Remove the marker from the array
+				markers = markers.filter((m) => m.marker !== marker);
+
+				// Reassign labels for remaining markers
+				markers.forEach((m, index) => {
+					m.marker.setLabel(`${index + 1}`);
+				});
+				dispatch('markers', markers);
+			});
+
+			// Store the marker, address, and pinCounter in the markers array
+			markers.push({
+				marker: marker, // Make sure to store the marker object itself
+				address: location.address,
+				location: location.location,
+				pinNumber: markers.length + 1
+			});
+		});
+	}
+
+	onMount(async () => {
 		Object.assign(window, {
-			mapLoaded: getCurrentLocation
+			mapLoaded: async function () {
+				await getCurrentLocation();
+			}
 		});
 
-		//Assign
 		src = `https://maps.googleapis.com/maps/api/js?key=${PUBLIC_GOOGLE_MAPS_API_KEY}&callback=mapLoaded`;
 	});
 </script>
 
 <!-- This is tailwind css class change with whatever fits to your case. -->
-<div class="lg:w-1/2 w-full h-72 ml-auto" bind:this={container} />
+<div class="lg:w-1/2 w-full h-72 lg:ml-auto" bind:this={container} />
 <svelte:head>
 	{#if src}
 		<script {src}></script>

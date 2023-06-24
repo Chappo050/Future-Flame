@@ -26,7 +26,7 @@ interface MembersData {
 
 interface MarkerData {
 	address: string;
-	marker: object;
+	location: object;
 	pinNumber: number;
 }
 

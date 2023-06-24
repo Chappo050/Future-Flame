@@ -1,19 +1,11 @@
 <script lang="ts">
 	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
-	import GoogleMaps from '../maps/googleMaps.svelte';
-	import LocationList from './locationList.svelte';
+	import LocationAndMap from './LocationAndMap.svelte';
 
 	let tabSet: number = 0;
 	export let groupData: GroupData | null | undefined;
-	let map: any;
-	let locations: MarkerData[];
+
 	export let isAdmin = false;
-	const listLocations = (markers: MarkerData[]) => {
-		console.log(markers);
-		if (markers.length) {
-			locations = markers;
-		}
-	};
 </script>
 
 <div class="w-full px-5">
@@ -27,10 +19,7 @@
 				{#if tabSet === 0}
 					{groupData?.mission || 'Data fail to load'}
 				{:else if tabSet === 1}
-					<div class="flex">
-						<LocationList {locations} />
-						<GoogleMaps {map} {isAdmin} globally on:markers={(e) => listLocations(e.detail)} />
-					</div>
+					<LocationAndMap {isAdmin} groupId={groupData?.id} />
 				{:else if tabSet === 2}
 					(tab panel 3 contents)
 				{/if}

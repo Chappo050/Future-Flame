@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
-	import GroupInfo from '$lib/components/group/GroupInfo.svelte';
-	import Location from '$lib/components/group/Location.svelte';
+	import GroupInfo from '$lib/components/group/groupInfo/GroupInfo.svelte';
+	import Location from '$lib/components/group/groupInfo/Location.svelte';
 	import MemberList from '$lib/components/group/MemberList.svelte';
 	import PostBlock from '$lib/components/group/PostColumn.svelte';
 	import FfButtonPrimary from '$lib/components/standardInterface/FFButtonPrimary.svelte';

@@ -1,10 +1,14 @@
 // src/routes/profile/+page.ts
 import { handleError } from '$lib/helpers/APIHelpers';
+import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import { Permissions } from '$lib/helpers/backend/permissions';
 
 export const load: PageLoad = async ({ parent, params }) => {
 	const { supabase, session } = await parent(); //Get session
 	const groupSlug = params.title;
+
+	if (!session) redirect(301, '/');
 
 	const { data: groupDataReturned, error: groupError } = await supabase
 		.from('groups')
@@ -15,6 +19,8 @@ export const load: PageLoad = async ({ parent, params }) => {
 	const groupData = groupDataReturned as GroupData;
 
 	handleError(groupError, 'Error fetching group data from slug');
+
+	const isAdmin = await Permissions.isGroupAdmin(session, supabase, groupData.id);
 
 	const { data: postData, error: postDataError } = await supabase.from('group_posts').select(`*`);
 
@@ -79,6 +85,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 	groupData.members = memberList;
 	groupData.posts = postWithLikes;
 	console.log('return data from Group Members List', memberList);
+	console.log('isAdmin', isAdmin);
 
-	return { session, groupData };
+	return { session, groupData, isAdmin };
 };
