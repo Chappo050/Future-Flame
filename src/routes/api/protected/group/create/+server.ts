@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, locals: { getSession } }) 
 	handleError(checkGroupError, 'Error checking group name');
 
 	//Return null for error
-	if (checkGroup.length) return json({ error: 'Group Name Already Exists.' });
+	if (checkGroup?.length) return json({ error: 'Group Name Already Exists.' });
 	//Add user
 	incomingData.user_id = session.user.id;
 	console.log(incomingData);
@@ -43,7 +43,7 @@ export const POST: RequestHandler = async ({ request, locals: { getSession } }) 
 	//////Create Members//////////
 
 	const membersPayload = {
-		group_id: newGroup.id,
+		group_id: newGroup?.id,
 		user_id: session.user.id,
 		role: 'admin'
 	};
