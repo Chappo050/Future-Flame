@@ -28,6 +28,7 @@ interface MarkerData {
 	address: string;
 	location: object;
 	pinNumber: number;
+	description?: string;
 }
 
 interface PostData {

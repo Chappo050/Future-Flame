@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	//import mapStyles from './map-styles'; // optional
-	export let locations: any = [];
+	export let locations: MarkerData[] = [];
 	export let globally = true;
 	export let map;
 	export let isAdmin = false;
@@ -23,11 +23,27 @@
 
 	// Counter for the number of pins
 	let pinCounter = 0;
+
+	$: {
+		console.log('MAP UPDTIE', locations);
+		clearMap(); // Clear the map
+		initMap();
+	}
+
+	const clearMap = () => {
+		// Iterate over the markers array
+		markers.forEach((markerData) => {
+			// Remove the marker from the map
+			markerData.marker.setMap(null);
+		});
+		// Clear the markers array
+		markers = [];
+	};
 	const getCurrentLocation = async () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
-					center = {
+					center = locations[0].location || {
 						lat: position.coords.latitude,
 						lng: position.coords.longitude
 					};
@@ -61,6 +77,22 @@
 					map: map,
 					label: `${markers.length + 1}` // Assigning the label here
 				});
+
+				// Add a hover listener to the marker
+				let infowindow = new google.maps.InfoWindow({
+					content: location.description, // Add the description or content you want to display here
+					closeOnAdd: true, //No x in the corner
+					disableAutoPan: true
+				});
+
+				marker.addListener('mouseover', function () {
+					infowindow.open(map, marker);
+				});
+
+				marker.addListener('mouseout', function () {
+					infowindow.close();
+				});
+
 				// Instantiate a geocoder
 				let geocoder = new google.maps.Geocoder();
 
@@ -122,6 +154,19 @@
 				label: `${markers.length + 1}`
 			});
 
+			// Add a hover listener to the marker
+			let infowindow = new google.maps.InfoWindow({
+				content: location.description // Add the description or content you want to display here
+			});
+
+			marker.addListener('mouseover', function () {
+				infowindow.open(map, marker);
+			});
+
+			marker.addListener('mouseout', function () {
+				infowindow.close();
+			});
+
 			// Add a click listener to the marker
 			marker.addListener('click', () => {
 				marker.setMap(null); // remove the marker
@@ -158,7 +203,7 @@
 </script>
 
 <!-- This is tailwind css class change with whatever fits to your case. -->
-<div class="lg:w-1/2 w-full h-72 lg:ml-auto" bind:this={container} />
+<div class="lg:w-1/2 w-full h-72 lg:ml-auto text-black" bind:this={container} />
 <svelte:head>
 	{#if src}
 		<script {src}></script>

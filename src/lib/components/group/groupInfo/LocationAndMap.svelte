@@ -11,6 +11,7 @@
 	export let isAdmin: boolean = false;
 	export let groupId: string | undefined;
 	const listLocations = async (markers: MarkerData[]) => {
+		locations = markers;
 		console.log(markers);
 		if (markers.length) {
 			locations = markers.map(({ marker, ...rest }) => rest);
@@ -38,8 +39,8 @@
 </script>
 
 {#if !loading}
-	<div class="lg:flex flex-col">
-		<LocationList {locations} />
+	<div class="flex lg:flex-row flex-col gap-10">
+		<LocationList {locations} {isAdmin} on:updateLocation={(e) => listLocations(e.detail)} />
 		<GoogleMaps {map} {isAdmin} {locations} globally on:markers={(e) => listLocations(e.detail)} />
 	</div>
 {:else}
