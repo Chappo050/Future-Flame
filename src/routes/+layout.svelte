@@ -22,6 +22,8 @@
 	inject({ mode: dev ? 'development' : 'production' });
 
 	//Components
+	import Fa from 'svelte-fa';
+	import { faBars } from '@fortawesome/free-solid-svg-icons';
 	import SideNav from '$lib/components/global/SideNav.svelte';
 	import Hamburger from '$lib/svgs/Hamburger.svelte';
 	import { navigating } from '$app/stores';
@@ -49,7 +51,7 @@
 	});
 
 	const drawSettings: DrawerSettings = {
-		width: 'w-full'
+		width: 'w-2/3'
 	};
 	function drawerOpen(): void {
 		drawerStore.open(drawSettings);
@@ -78,9 +80,9 @@
 					><img src={logo} class="h-12" alt="Future Flame Logo" />
 				</a>
 				<div class="flex items-center">
-					<button on:click={drawerOpen} class="lg:hidden btn btn-sm mr-4">
+					<button on:click={drawerOpen} class="lg:hidden btn btn-icon-sm justify-end">
 						<span>
-							<Hamburger />
+							<Fa icon={faBars} size="1.5x" />
 						</span>
 					</button>
 				</div>
