@@ -3,8 +3,8 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 import { error } from '@sveltejs/kit';
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { Handle, redirect } from '@sveltejs/kit';
-
-export const handle: Handle = async ({ event, resolve }) => {
+import { sequence } from '@sveltejs/kit/hooks';
+export const first: Handle = async ({ event, resolve }) => {
 	event.locals.supabase = createSupabaseServerClient({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
@@ -36,3 +36,28 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	});
 };
+export const second: Handle = async ({ event, resolve }) => {
+	// Apply CORS header for API routes
+	if (event.url.pathname.startsWith('/api')) {
+		// Required for CORS to work
+		if (event.request.method === 'OPTIONS') {
+			return new Response(null, {
+				headers: {
+					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Headers': '*'
+				}
+			});
+		}
+	}
+
+	const response = await resolve(event);
+	if (event.url.pathname.startsWith('/api')) {
+		response.headers.append('Access-Control-Allow-Origin', `*`);
+	}
+	console.log('ADDED HEADRES', response.headers);
+
+	return response;
+};
+
+export const handle = sequence(first, second);
